@@ -5,10 +5,8 @@ from pandas import DataFrame
 from sklearn.preprocessing import LabelEncoder
 
 
-#def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
-
 def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv('../datasets/corona.csv')
+    df = pd.read_csv('../datasets/corona.csv', low_memory=False)
 
     df = df.drop(['Ind_ID', 'Test_date'], axis=1)
 
@@ -20,12 +18,15 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     for i in ['Cough_symptoms', 'Fever', 'Sore_throat', 'Shortness_of_breath', 'Headache']:
         df[i] = df[i].replace({True: 1, False: 0})
+
     df['Age_60_above'] = df['Age_60_above'].replace({'No': 0, 'Yes': 1})
     df = pd.get_dummies(df, columns=['Sex'], drop_first=True, dtype=int)
 
     le = LabelEncoder()
     for i in ['Corona', 'Known_contact']:
         df[i] = le.fit_transform(df[i])
+
+    df = df.astype('int32')
 
     X = df.drop(['Corona'], axis=1)
     y = df['Corona']
