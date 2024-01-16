@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 
 #def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
-def get_dataset_corona() -> DataFrame:
+def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
     df = pd.read_csv('../datasets/corona.csv')
 
     df = df.drop(['Ind_ID', 'Test_date'], axis=1)
@@ -27,10 +27,10 @@ def get_dataset_corona() -> DataFrame:
     for i in ['Corona', 'Known_contact']:
         df[i] = le.fit_transform(df[i])
 
-    # X = df.drop(['Corona'], axis=1)
-    # y = df['Corona']
+    X = df.drop(['Corona'], axis=1)
+    y = df['Corona']
 
-    return df
+    return X, y
 
 
 def get_dataset_divorce() -> Tuple[pd.DataFrame, pd.Series]:

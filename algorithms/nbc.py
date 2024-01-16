@@ -1,5 +1,14 @@
 from sklearn import metrics
+import pandas as pd
 
+
+def prepare_data(X_set, y_set, classColumn):
+    X = pd.DataFrame(X_set)
+    y = pd.DataFrame(y_set)
+    df = pd.concat([X, y], axis=1)
+    X = df.loc[:, df.columns != classColumn]
+    y = df.loc[:, df.columns == classColumn]
+    return X, y
 
 class NBC:
 
@@ -32,7 +41,8 @@ class NBC:
                             len(df_for_label) + self.alpha *
                             self.valuesPerAttribute[attribute])
 
-    def fit(self, X_train, y_train):
+    def fit(self, X_train, y_train, className):
+        X_train, y_train = prepare_data(X_train, y_train, className)
         df = X_train.join(y_train)
 
         # labels

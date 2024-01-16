@@ -4,20 +4,16 @@ from algorithms.nbc import NBC
 from sklearn import metrics
 from sklearn.naive_bayes import GaussianNB
 
-corona_df = get_dataset_corona()
+X, y = get_dataset_corona()
 
 
 def test_nbc_for_corona():
-    train_df, test_df = train_test_split(corona_df, test_size=0.2, random_state=42)
     className = 'Corona'
-
-    X_train = train_df.loc[:, train_df.columns != className]
-    y_train = train_df.loc[:, train_df.columns == className]
-    X_test = test_df.loc[:, test_df.columns != className]
-    y_test = test_df.loc[:, test_df.columns == className]
-
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # print("Dimension of X:", X.shape)
+    # print("Dimension of y:", y.shape)
     nbc = NBC(1)
-    nbc.fit(X_train, y_train)
+    nbc.fit(X_train, y_train, className)
     scores = nbc.accuracy_score(X_test, y_test)
     print(scores)
 
