@@ -1,6 +1,6 @@
 from datasets_manager import *
 from sklearn.model_selection import train_test_split
-from algorithms.nbc import NBC
+from algorithms.nbc_classifier import NBC
 from sklearn import metrics
 from sklearn.naive_bayes import GaussianNB
 

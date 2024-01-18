@@ -1,7 +1,5 @@
 import pandas as pd
 from typing import Tuple
-
-from pandas import DataFrame
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -28,6 +26,7 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     df = df.astype('int32')
 
+    """
     for column in df.columns:
         none_count = df[column].isna().sum()
 
@@ -35,6 +34,7 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
             print(f"Column '{column}' has {none_count} occurrences of None.")
         else:
             print(f"Column '{column}' has no occurrences of None.")
+    """
 
     X = df.drop(['Corona'], axis=1)
     y = df['Corona']

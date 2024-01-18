@@ -13,18 +13,14 @@ def prepare_data(X_set, y_set, classColumn):
 class NBC:
 
     def __init__(self, alpha=None):
-
-        if alpha is None:
-            self.alpha = 1.0
-        else:
-            self.alpha = alpha
+        self.alpha = 1.0 if alpha is None else alpha
         self.labels = None
         self.attributes = None
         self.classColumn = None
         self.valuesPerAttribute = {}  # storing number of unique values per attribute
         self.conditionalProbabilities = {}
-        self.pClass = {}  # pstwo nalezenia do klasy
-        self.nClassOccurrences = {}  # liczba wystapien klasy
+        self.pClass = {}
+        self.nClassOccurrences = {}
 
     def count_conditional_probabilities(self, df):
         for label in self.labels:
