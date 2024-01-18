@@ -28,6 +28,14 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     df = df.astype('int32')
 
+    for column in df.columns:
+        none_count = df[column].isna().sum()
+
+        if none_count > 0:
+            print(f"Column '{column}' has {none_count} occurrences of None.")
+        else:
+            print(f"Column '{column}' has no occurrences of None.")
+
     X = df.drop(['Corona'], axis=1)
     y = df['Corona']
 
@@ -35,7 +43,12 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_divorce() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("datasets/divorce.csv")
+    df = pd.read_csv("../datasets/divorce.csv")
+
+    columns_list = df.columns
+    for column in df.columns:
+        unique_values = df[column].unique()
+        #print(f"Unique values in column '{column}': {unique_values}")
 
     X = df.drop(['Divorce_Y_N'], axis=1)
     y = df['Divorce_Y_N']

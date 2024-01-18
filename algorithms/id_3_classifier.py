@@ -1,4 +1,4 @@
-#https://www.kaggle.com/code/hinsontsui/iris-prediction-id3-decision-tree
+# https://www.kaggle.com/code/hinsontsui/iris-prediction-id3-decision-tree
 
 import numpy as np
 
@@ -52,21 +52,23 @@ class TreeNode:
     def predict(self, sample):
         if self.decision is not None:
             # uncomment to get log information of code execution
-            #print("Decision:", self.decision)
+            print("Decision:", self.decision)
             return self.decision
         else:
-            # this node is an internal one, further queries about an attribute
-            # of the data is needed.
+            if self.split_feat_name is None or self.split_feat_name not in sample:
+                # Handle the case when split feature is None or not in the sample
+                print("Invalid split feature or feature not present in sample.")
+                return self.default_decision  # You might want to define a default decision or handle it differently
+
             attr_val = sample[self.split_feat_name]
-            child = self.children.get(attr_val, None)
+            if attr_val not in self.children:
+                # Handle the case when the attribute value is not in the children
+                print("Attribute value not found in children.")
+                return self.default_decision  # You might want to define a default decision or handle it differently
 
-            if child is None:
-                # Handle the case where the attribute value is not in self.children
-             #   print(f"Warning: Attribute value {attr_val} not found in children.")
-                return self.default_decision
-
+            child = self.children[attr_val]
             # uncomment to get log information of code execution
-           # print("Testing ", self.split_feat_name, "->", attr_val)
+            print("Testing ", self.split_feat_name, "->", attr_val)
             return child.predict(sample)
 
     def fit(self, X, y):
@@ -80,45 +82,56 @@ class TreeNode:
         if self.default_decision is None:
             self.default_decision = y.mode()[0]
 
-        #print(self.name, "received", len(X), "samples")
+        print(self.name, "received", len(X), "samples")
         if len(X) < self.min_sample_num:
             # If the data is empty when this node is arrived,
             # we just make an arbitrary decision
             if len(X) == 0:
                 self.decision = self.default_decision
-         #       print("DECISION", self.decision)
+                print("DECISION", self.decision)
             else:
                 self.decision = y.mode()[0]
-         #       print("DECISION", self.decision)
+                print("DECISION", self.decision)
             return
         else:
             unique_values = y.unique()
             if len(unique_values) == 1:
                 self.decision = unique_values[0]
-          #      print("DECISION", self.decision)
+                print("DECISION", self.decision)
                 return
             else:
                 info_gain_max = 0
-                for a in X.keys():  # Examine each attribute
+                valid_features = [a for a in X.keys() if
+                                  len(X[a].unique()) > 1]  # Filter out features with only one unique value
+                if not valid_features:
+                    # Handle the case when there are no valid features to split on
+                    print("No valid features to split on.")
+                    return
+                for a in valid_features:  # Examine each valid attribute
                     aig = compute_info_gain(X, a, y)
+                    print(a, aig)
                     if aig > info_gain_max:
                         info_gain_max = aig
                         self.split_feat_name = a
-           #     print(f"Split by {self.split_feat_name}, IG: {info_gain_max:.2f}")
+                print(f"Split by {self.split_feat_name}, IG: {info_gain_max:.2f}")
                 self.children = {}
                 for v in X[self.split_feat_name].unique():
-                    print(f"Processing value: {v}")
-                    if v is not None:
-                        index = X[self.split_feat_name] == v
-                        if v not in self.children:
-                            print(f"Creating child for value: {v}")
-                            self.children[v] = TreeNode(
-                                node_name=self.name + ":" + self.split_feat_name + "==" + str(v),
-                                min_sample_num=self.min_sample_num,
-                                default_decision=self.default_decision
-                            )
-                        #print(X[index], y[index])
-                        self.children[v].fit(X[index], y[index])
-                    else:
-                        print("Warning: Unexpected value 'None' in", self.split_feat_name)
+                    index = X[self.split_feat_name] == v
+                    self.children[v] = TreeNode(
+                        node_name=self.name + ":" + self.split_feat_name + "==" + str(v),
+                        min_sample_num=self.min_sample_num,
+                        default_decision=self.default_decision)
+                    self.children[v].fit(X[index], y[index])
 
+    def predict_all(self, X, y):
+        predictions = []
+        err_fp = 0
+        err_fn = 0
+        for (_, ct), tgt in zip(X.iterrows(), y):
+            a = self.predict(ct)
+            predictions.append(a)
+            if a and not tgt:
+                err_fp += 1
+            elif not a and tgt:
+                err_fn += 1
+        return predictions, err_fp, err_fn

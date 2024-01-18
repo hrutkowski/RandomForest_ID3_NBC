@@ -4,11 +4,8 @@ from algorithms.nbc import NBC
 from sklearn import metrics
 from sklearn.naive_bayes import GaussianNB
 
-X, y = get_dataset_corona()
 
-
-def test_nbc_for_corona():
-    className = 'Corona'
+def test_nbc_for_dataset(X, y, className):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     # print("Dimension of X:", X.shape)
     # print("Dimension of y:", y.shape)
@@ -29,4 +26,11 @@ def test_nbc_for_corona():
     return scores
 
 
-test_nbc_for_corona()
+X, y = get_dataset_divorce()
+label = 'Divorce_Y_N'
+test_nbc_for_dataset(X, y, label)
+
+X, y = get_dataset_corona()
+print(X)
+label = 'Corona'
+test_nbc_for_dataset(X, y, label)

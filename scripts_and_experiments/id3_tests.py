@@ -9,41 +9,20 @@ from sklearn.datasets import load_iris
 
 X, y = get_dataset_corona()
 
-X = X.iloc[:250]
-y = y.iloc[:250]
+# X = X.iloc[:100]
+# y = y.iloc[:100]
+
+print(X)
+print(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print("Dimension of X:", X.shape)
-print("Dimension of y:", y.shape)
+#print("Dimension of X:", X.shape)
+#print("Dimension of y:", y.shape)
 
-# iris = load_iris()
-#
-# df = pd.DataFrame(data= np.c_[iris['data'], iris['target']],
-#                      columns= iris['feature_names'] + ['target'])
-#
-# Xiris = df.drop( "target", axis = 1)
-# yiris = df["target"]
-# X_train_i, X_test_i, y_train_i, y_test_i = train_test_split(Xiris, yiris, test_size=0.2, random_state=42)
-#
-# print("Dimension of X:", Xiris.shape)
-# print("Dimension of y:", yiris.shape)
 
-t = TreeNode(min_sample_num=50)
+t = TreeNode(min_sample_num=5)
 t.fit(X_train, y_train)
-
-predictions = []
-corr = 0
-err_fp = 0
-err_fn = 0
-for (i, ct), tgt in zip(X_test.iterrows(), y_test):
-    a = t.predict(ct)
-    predictions.append(a)
-    if a and not tgt:
-        err_fp += 1
-    elif not a and tgt:
-        err_fn += 1
-    else:
-        corr += 1
+predictions, err_fp, err_fn = t.predict_all(X_test, y_test)
 
 # Evaluate the accuracy
 accuracy = (predictions == y_test.values).mean()
