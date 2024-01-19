@@ -11,7 +11,7 @@ def test_nbc_for_dataset(X, y, className):
     # print("Dimension of y:", y.shape)
     nbc = NBC(1)
     nbc.fit(X_train, y_train, className)
-    scores = nbc.accuracy_score(X_test, y_test)
+    scores = nbc.score(X_test, y_test)
     print(scores)
 
     nb_classifier = GaussianNB()
@@ -31,6 +31,5 @@ label = 'Divorce_Y_N'
 test_nbc_for_dataset(X, y, label)
 
 X, y = get_dataset_corona()
-print(X)
 label = 'Corona'
 test_nbc_for_dataset(X, y, label)

@@ -10,44 +10,41 @@ def prepare_data(X_set, y_set, classColumn):
     y = df.loc[:, df.columns == classColumn]
     return X, y
 
+
 class NBC:
 
-    def __init__(self, alpha=None):
-
-        if alpha is None:
-            self.alpha = 1.0
-        else:
-            self.alpha = alpha
+    def __init__(self, alpha=1.0):
+        self.alpha = alpha
         self.labels = None
         self.attributes = None
-        self.classColumn = None
         self.valuesPerAttribute = {}  # storing number of unique values per attribute
         self.conditionalProbabilities = {}
-        self.pClass = {}  # pstwo nalezenia do klasy
-        self.nClassOccurrences = {}  # liczba wystapien klasy
+        self.pLabel = {}  # pstwo nalezenia do klasy
+        self.nLabelOccurrences = {}  # liczba wystapien klasy
 
-    def count_conditional_probabilities(self, df):
+    def count_conditional_probabilities(self, df, labelColumn):
         for label in self.labels:
-            self.nClassOccurrences[label] = df[self.classColumn].value_counts()[label]
-            self.pClass[label] = (self.nClassOccurrences[label] + self.alpha) / (
+            df_for_label = df[df[labelColumn] == label]
+            self.nLabelOccurrences[label] = len(df_for_label)
+            self.pLabel[label] = (self.nLabelOccurrences[label] + self.alpha) / (
                     len(df.index) + self.alpha * len(self.labels))
-            df_for_label = df[df[self.classColumn] == label]
+
             for attribute in self.attributes:
                 uniqueAttributes = df[attribute].unique().tolist()
                 for attributeValue in uniqueAttributes:
                     attrForClassOccurrences = len(df_for_label[df_for_label[attribute] == attributeValue])
-                    self.conditionalProbabilities[(label, attribute, attributeValue)] = (
+                    key = (label, attribute, attributeValue)
+                    self.conditionalProbabilities[key] = (
                         attrForClassOccurrences + self.alpha) / (
                             len(df_for_label) + self.alpha *
                             self.valuesPerAttribute[attribute])
 
-    def fit(self, X_train, y_train, className):
-        X_train, y_train = prepare_data(X_train, y_train, className)
+    def fit(self, X_train, y_train, labelColumn):
+        X_train, y_train = prepare_data(X_train, y_train, labelColumn)
         df = X_train.join(y_train)
 
         # labels
-        self.classColumn = y_train.keys().tolist()[0]
-        self.labels = y_train[self.classColumn].unique()
+        self.labels = y_train[labelColumn].unique()
 
         # attributes
         self.attributes = X_train.keys().tolist()
@@ -55,30 +52,32 @@ class NBC:
         for attr in self.attributes:
             self.valuesPerAttribute[attr] = X_train[attr].nunique()
 
-        self.count_conditional_probabilities(df)
+        self.count_conditional_probabilities(df, labelColumn)
 
     def predict(self, X):
         return X.apply(lambda row: self.predict_row(row.values.flatten().tolist()), axis=1)
 
     def predict_row(self, row):
         p = float('-inf')
-        predictedClass = 'undefined'
+        predictedLabel = 'undefined'
 
         for label in self.labels:
-            pClass = self.pClass[label]
+            pLabel = self.pLabel[label]
             for i in range(len(self.attributes)):
                 attr_value = row[i]
-                if (label, self.attributes[i], attr_value) in self.conditionalProbabilities:
-                    pClass = pClass * self.conditionalProbabilities[(label, self.attributes[i], attr_value)]
-                else:
-                    nvals = float(self.valuesPerAttribute[self.attributes[i]])
-                    pClass = pClass * self.alpha / (self.nClassOccurrences[label] + nvals * self.alpha)
-            if pClass > p:
-                predictedClass = label
-                p = pClass
-        return predictedClass
+                key = (label, self.attributes[i], attr_value)
 
-    def accuracy_score(self, X, y):
+                if key in self.conditionalProbabilities:
+                    pLabel = pLabel * self.conditionalProbabilities[key]
+                else:
+                    possibleValues = float(self.valuesPerAttribute[self.attributes[i]])
+                    pLabel = pLabel * self.alpha / (self.nLabelOccurrences[label] + possibleValues * self.alpha)
+            if pLabel > p:
+                predictedLabel = label
+                p = pLabel
+        return predictedLabel
+
+    def score(self, X, y):
         y_pred = self.predict(X)
         y = y.values.flatten().tolist()
         acc = metrics.accuracy_score(y, y_pred)
