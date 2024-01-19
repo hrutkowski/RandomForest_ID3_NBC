@@ -10,7 +10,7 @@ def test_nbc_for_dataset(X, y, className):
     # print("Dimension of X:", X.shape)
     # print("Dimension of y:", y.shape)
     nbc = NBC(1)
-    nbc.fit(X_train, y_train)
+    nbc.fit(X_train, y_train, className)
     scores = nbc.score(X_test, y_test)
     print(scores)
 

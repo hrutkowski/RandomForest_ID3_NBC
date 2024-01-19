@@ -1,4 +1,4 @@
-import datasets_manager
+from datasets_manager import *
 import numpy as np
 from algorithms.id3_classifier import ID3
 from sklearn.model_selection import train_test_split
