@@ -1,7 +1,5 @@
 import pandas as pd
 from typing import Tuple
-
-from pandas import DataFrame
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -27,6 +25,24 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
         df[i] = le.fit_transform(df[i])
 
     df = df.astype('int32')
+
+    for column in df.columns:
+        none_count = df[column].isna().sum()
+
+        if none_count > 0:
+            print(f"Column '{column}' has {none_count} occurrences of None.")
+        else:
+            print(f"Column '{column}' has no occurrences of None.")
+
+    """
+    for column in df.columns:
+        none_count = df[column].isna().sum()
+
+        if none_count > 0:
+            print(f"Column '{column}' has {none_count} occurrences of None.")
+        else:
+            print(f"Column '{column}' has no occurrences of None.")
+    """
 
     X = df.drop(['Corona'], axis=1)
     y = df['Corona']
@@ -57,8 +73,8 @@ def get_dataset_glass() -> Tuple[pd.DataFrame, pd.Series]:
     return X, y
 
 
-def get_dataset_loan_approval_dataset() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("datasets/loan_approval_dataset.csv")
+def get_dataset_loan_approval() -> Tuple[pd.DataFrame, pd.Series]:
+    df = pd.read_csv("datasets/loan_approval.csv")
 
     df = df.drop(['loan_id'], axis=1)
 

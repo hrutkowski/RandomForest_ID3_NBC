@@ -1,7 +1,8 @@
-# https://www.kaggle.com/code/hinsontsui/iris-prediction-id3-decision-tree
+# Link to GitHub repo: https://www.kaggle.com/code/hinsontsui/iris-prediction-id3-decision-tree
+# Classifier modified for out needs
 
 import numpy as np
-
+from sklearn import metrics
 
 def compute_entropy(y):
     """
@@ -26,7 +27,7 @@ def compute_info_gain(samples, attr, target):
     return ent - split_ent
 
 
-class TreeNode:
+class ID3:
     """
     A recursively defined data structure to store a tree.
     Each node can contain other nodes as its children
@@ -34,7 +35,7 @@ class TreeNode:
 
     def __init__(self, node_name="", min_sample_num=10, default_decision=None):
         self.children = {}  # Sub nodes --
-        # recursive, those elements of the same type (TreeNode)
+        # recursive, those elements of the same type (ID3)
         self.decision = None  # Undecided
         self.split_feat_name = None  # Splitting feature
         self.name = node_name
@@ -117,7 +118,7 @@ class TreeNode:
                 self.children = {}
                 for v in X[self.split_feat_name].unique():
                     index = X[self.split_feat_name] == v
-                    self.children[v] = TreeNode(
+                    self.children[v] = ID3(
                         node_name=self.name + ":" + self.split_feat_name + "==" + str(v),
                         min_sample_num=self.min_sample_num,
                         default_decision=self.default_decision)
@@ -135,3 +136,19 @@ class TreeNode:
             elif not a and tgt:
                 err_fn += 1
         return predictions, err_fp, err_fn
+
+    # TO DO ??? (DODANE NA SZYBKO)
+    def eval(self, X_test, y_test):
+        acc, f1 = self.scores(X_test, y_test)
+        print('Accuracy:', acc)
+        print('F1 score: ', f1)
+        return acc, f1
+
+    def scores(self, X_test, y_test):
+        X_test = np.array(X_test)
+        y_pred = self.predict(X_test)
+        y_pred = np.array(y_pred, dtype=str)
+        y_test = np.array(y_test, dtype=str)
+        acc = metrics.accuracy_score(y_test, y_pred)
+        f1 = metrics.f1_score(y_test, y_pred, average='macro')
+        return acc, f1

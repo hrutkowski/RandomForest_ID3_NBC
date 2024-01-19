@@ -1,6 +1,6 @@
-from datasets_manager import *
+import datasets_manager
 import numpy as np
-from algorithms.id_3_classifier import TreeNode
+from algorithms.id3_classifier import ID3
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.tree import DecisionTreeClassifier
@@ -20,7 +20,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 #print("Dimension of y:", y.shape)
 
 
-t = TreeNode(min_sample_num=5)
+t = ID3(min_sample_num=5)
 t.fit(X_train, y_train)
 predictions, err_fp, err_fn = t.predict_all(X_test, y_test)
 

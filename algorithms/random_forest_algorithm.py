@@ -1,28 +1,26 @@
 import pandas as pd
 import numpy as np
-from sklearn import metrics
-from id3_classifier import ID3
-from nbc_classifier import NBC
 from typing import List, Tuple
+from sklearn import metrics
+from .id3_classifier import ID3
+from .nbc_classifier import NBC
 
 
 class RandomForest:
 
     def __init__(self, n: int = 100, samples_percentage: float = 0.5, attributes_percentage: float = 0.5,
-                 classifier_list: List = None, classifier_ratio_list: List[float] = None):
-        assert len(classifier_list) == len(classifier_ratio_list), \
-            "List of classifiers and classifier ratios must have the same size!"
+                 classifier_list: List = [ID3, NBC], classifier_ratio_list: List = [0.5, 0.5]):
         self.n = n
         self.samples_percentage = samples_percentage
         self.attributes_percentage = attributes_percentage
-        if classifier_list is None:
-            self.classifier_list = [ID3, NBC]
-        if classifier_ratio_list is None:
-            self.classifier_ratio_list = [0.5, 0.5]
+        self.classifier_list = classifier_list
+        self.classifier_ratio_list = classifier_ratio_list
         self.forest = []
         self.attributes = []
 
     def fit(self, X_train, y_train):
+        assert len(self.classifier_list) == len(self.classifier_ratio_list), \
+            "List of classifiers and classifier ratios must have the same size!"
         for classifier, ratio in zip(self.classifier_list, self.classifier_ratio_list):
             for _ in range(round(self.n * ratio)):
                 clf = classifier()

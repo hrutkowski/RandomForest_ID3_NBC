@@ -1,6 +1,6 @@
 from datasets_manager import *
 from sklearn.model_selection import train_test_split
-from algorithms.nbc import NBC
+from algorithms.nbc_classifier import NBC
 from sklearn import metrics
 from sklearn.naive_bayes import GaussianNB
 
@@ -10,7 +10,7 @@ def test_nbc_for_dataset(X, y, className):
     # print("Dimension of X:", X.shape)
     # print("Dimension of y:", y.shape)
     nbc = NBC(1)
-    nbc.fit(X_train, y_train, className)
+    nbc.fit(X_train, y_train)
     scores = nbc.score(X_test, y_test)
     print(scores)
 
