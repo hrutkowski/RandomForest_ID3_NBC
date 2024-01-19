@@ -13,8 +13,8 @@ def prepare_data(X_set, y_set, classColumn):
 
 class NBC:
 
-    def __init__(self, alpha=1.0):
-        self.alpha = alpha
+    def __init__(self, alpha=None):
+        self.alpha = 1.0 if alpha is None else alpha
         self.labels = None
         self.attributes = None
         self.valuesPerAttribute = {}  # storing number of unique values per attribute
