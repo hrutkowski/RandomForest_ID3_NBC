@@ -84,4 +84,5 @@ class NBC:
         y = y.values.flatten().tolist()
         acc = metrics.accuracy_score(y, y_pred)
         f1 = metrics.f1_score(y, y_pred, average='macro')
-        return acc, f1
+        conf_matrix = metrics.confusion_matrix(y, y_pred)
+        return acc, f1, conf_matrix
