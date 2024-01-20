@@ -20,7 +20,7 @@ from scripts_and_experiments.experiment_scripts import cross_validation_score, t
 
 
 def random_forest_experiment(X, y, samples_percentage_list: List[float], attributes_percentage_list: List[float],
-                             classifier_list: List[float], classifier_ratio_lists: List[List[float]]):
+                             classifiers: List[float], classifiers_ratioss: List[List[float]]):
     print("elo")
 
 
@@ -91,6 +91,20 @@ def nbc_comparison():
         print('=========================================================')
 
 
+def tree_number_influence():
+    print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
+    print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
+    samples_percentage_list = [0.75]
+    attributes_percentage_list = [0.75]
+    classifiers = [NBC, ID3]
+    classifiers_ratioss = [[0.5, 0.5]]
+    n = [wefewf]
+
+    X, y = get_dataset_divorce()
+
+    random_forest_experiment(X, y, n, samples_percentage_list, attributes_percentage_list,
+                             classifiers, classifiers_ratioss)
+
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
 def classifier_ratio_influence():
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
@@ -99,13 +113,13 @@ def classifier_ratio_influence():
     experiments_number = 1
     samples_percentage_list = [0.75]
     attributes_percentage_list = [0.75]
-    classifier_list = [NBC, ID3]
-    classifier_ratio_lists = [[0, 1], [0.25, 0.75], [0.5, 0.5], [0.75, 0.25], [0, 1]]
+    classifiers = [NBC, ID3]
+    classifiers_ratioss = [[0, 1], [0.25, 0.75], [0.5, 0.5], [0.75, 0.25], [1, 0]]
 
     X, y = get_dataset_divorce()
 
     random_forest_experiment(X, y, samples_percentage_list, attributes_percentage_list,
-                             classifier_list, classifier_ratio_lists)
+                             classifiers, classifiers_ratioss)
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
