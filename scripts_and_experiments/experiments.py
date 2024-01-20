@@ -8,7 +8,7 @@ from sklearn import metrics
 from itertools import product
 from sklearn.naive_bayes import CategoricalNB
 
-from algorithms.id3_classifier import ID3
+from algorithms.id3_classifier_old import ID3
 from algorithms.nbc_classifier import NBC
 from algorithms.random_forest_algorithm import RandomForest
 from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dataset_divorce, get_dataset_glass, \
@@ -66,6 +66,7 @@ def experiment3():
                 model_param_instances_per_classifier,
                 model_param_id3_to_NBC,
                 model_param_num_of_classifiers)
+
 
 def experiment_eval_ID3_NBC(dataset="corona"):
     print('\n=====================')

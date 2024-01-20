@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from typing import List, Tuple
 from sklearn import metrics
-from .id3_classifier import ID3
+from .id3_classifier_old import ID3
 from .nbc_classifier import NBC
 
 
