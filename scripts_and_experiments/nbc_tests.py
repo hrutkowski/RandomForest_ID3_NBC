@@ -5,12 +5,12 @@ from sklearn import metrics
 from sklearn.naive_bayes import GaussianNB
 
 
-def test_nbc_for_dataset(X, y, className):
+def test_nbc_for_dataset(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     # print("Dimension of X:", X.shape)
     # print("Dimension of y:", y.shape)
     nbc = NBC(1)
-    nbc.fit(X_train, y_train, className)
+    nbc.fit(X_train, y_train)
     scores = nbc.score(X_test, y_test)
     print(scores)
 
@@ -27,9 +27,7 @@ def test_nbc_for_dataset(X, y, className):
 
 
 X, y = get_dataset_divorce()
-label = 'Divorce_Y_N'
-test_nbc_for_dataset(X, y, label)
+test_nbc_for_dataset(X, y)
 
 X, y = get_dataset_corona()
-label = 'Corona'
-test_nbc_for_dataset(X, y, label)
+test_nbc_for_dataset(X, y)

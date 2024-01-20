@@ -21,10 +21,11 @@ class NBC:
         self.conditionalProbabilities = {}
         self.pLabel = {}  # pstwo nalezenia do klasy
         self.nLabelOccurrences = {}  # liczba wystapien klasy
+        self.labelColumn = None
 
-    def count_conditional_probabilities(self, df, labelColumn):
+    def count_conditional_probabilities(self, df):
         for label in self.labels:
-            df_for_label = df[df[labelColumn] == label]
+            df_for_label = df[df[self.labelColumn] == label]
             self.nLabelOccurrences[label] = len(df_for_label)
             self.pLabel[label] = (self.nLabelOccurrences[label] + self.alpha) / (
                     len(df.index) + self.alpha * len(self.labels))
@@ -39,12 +40,13 @@ class NBC:
                             len(df_for_label) + self.alpha *
                             self.valuesPerAttribute[attribute])
 
-    def fit(self, X_train, y_train, labelColumn):
-        X_train, y_train = prepare_data(X_train, y_train, labelColumn)
+    def fit(self, X_train, y_train):
+        self.labelColumn = y_train.name
+        X_train, y_train = prepare_data(X_train, y_train, self.labelColumn)
         df = X_train.join(y_train)
 
         # labels
-        self.labels = y_train[labelColumn].unique()
+        self.labels = y_train[self.labelColumn].unique()
 
         # attributes
         self.attributes = X_train.keys().tolist()
@@ -52,7 +54,7 @@ class NBC:
         for attr in self.attributes:
             self.valuesPerAttribute[attr] = X_train[attr].nunique()
 
-        self.count_conditional_probabilities(df, labelColumn)
+        self.count_conditional_probabilities(df)
 
     def predict(self, X):
         return X.apply(lambda row: self.predict_row(row.values.flatten().tolist()), axis=1)

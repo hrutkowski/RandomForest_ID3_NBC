@@ -62,6 +62,7 @@ class ID3:
                 return self.default_decision  # You might want to define a default decision or handle it differently
 
             attr_val = sample[self.split_feat_name]
+            #attr_val_tuple = tuple(attr_val)
             if attr_val not in self.children:
                 # Handle the case when the attribute value is not in the children
                 print("Attribute value not found in children.")

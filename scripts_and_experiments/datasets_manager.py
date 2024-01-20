@@ -26,14 +26,6 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     df = df.astype('int32')
 
-    for column in df.columns:
-        none_count = df[column].isna().sum()
-
-        if none_count > 0:
-            print(f"Column '{column}' has {none_count} occurrences of None.")
-        else:
-            print(f"Column '{column}' has no occurrences of None.")
-
     """
     for column in df.columns:
         none_count = df[column].isna().sum()
