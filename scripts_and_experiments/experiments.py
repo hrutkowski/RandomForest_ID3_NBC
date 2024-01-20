@@ -10,6 +10,7 @@ from sklearn.naive_bayes import CategoricalNB
 
 from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
+from sklearn.tree import DecisionTreeClassifier
 from algorithms.random_forest_algorithm import RandomForest
 from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dataset_divorce, get_dataset_glass, \
     get_dataset_loan_approval_dataset
@@ -23,27 +24,69 @@ def experiment1():
     print('=================')
     print("Eksperyment 1\nPorównanie własnej implementacji NBC z implementacją z biblioteki scikit-learn")
 
-    X, y = get_dataset_corona()
+    datasets = [get_dataset_corona(), get_dataset_divorce()]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    for dataset in datasets:
 
-    nbc_classifier = NBC(1)
-    start = time.time()
-    nbc_classifier.fit(X_train, y_train, 'Corona')
-    print('Czas fit() impl. wł. :', time.time() - start)
-    y_pred = nbc_classifier.predict(X_test)
-    our_preds = np.array(y_pred, dtype=int)
-    our_nbc_acc = metrics.accuracy_score(y_test, our_preds)
+        X, y = dataset
+        label_column = y.name
+        print("Zbiór", label_column)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
 
-    clf = CategoricalNB()
-    start = time.time()
-    clf.fit(X_train, y_train)
-    print('Czas fit() sklearn:', time.time() - start)
-    y_pred = clf.predict(X_test)
-    sklearn_nbc_acc = metrics.accuracy_score(y_test, y_pred)
+        nbc_classifier = NBC(1)
+        start = time.time()
+        nbc_classifier.fit(X_train, y_train, label_column)
+        print('Czas fit() impl. wł. :', time.time() - start)
+        y_pred = nbc_classifier.predict(X_test)
+        our_preds = np.array(y_pred, dtype=int)
+        our_nbc_acc = metrics.accuracy_score(y_test, our_preds)
 
-    print(f"Predykcje są takie same: {(our_preds == y_pred).all()}")
-    print(f"Dokładność jest taka sama: {(our_preds == y_pred).all()} - {sklearn_nbc_acc}=={our_nbc_acc}")
+        clf = CategoricalNB()
+        start = time.time()
+        clf.fit(X_train, y_train)
+        print('Czas fit() sklearn:', time.time() - start)
+        y_pred = clf.predict(X_test)
+        sklearn_nbc_acc = metrics.accuracy_score(y_test, y_pred)
+
+        print(f"Predykcje są takie same: {(our_preds == y_pred).all()}")
+        print(f"Dokładność jest taka sama: {(our_preds == y_pred).all()} - {sklearn_nbc_acc}=={our_nbc_acc}")
+        print('=========================================================')
+
+
+def experiment2():
+    # Eksperyment 2
+    # Testowanie gotowej implementacji ID3
+    print('=================')
+    print("Eksperyment 2\nPorównanie gotowej implementacji ID3 z implementacją z biblioteki sklearn")
+
+    datasets = [get_dataset_corona(), get_dataset_divorce()]
+
+    for dataset in datasets:
+
+        X, y = dataset
+        label_column = y.name
+        print("Zbiór", label_column)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+
+        t = ID3(min_sample_num=5)
+        start = time.time()
+        t.fit(X_train, y_train)
+        print('Czas fit() id3 :', time.time() - start)
+        #acc, f1 = t.eval(X_test, y_test)
+        predictions, err_fp, err_fn = t.predict_all(X_test, y_test)
+        acc = (predictions == y_test.values).mean()
+
+        tree_classifier = DecisionTreeClassifier(random_state=42)
+        start = time.time()
+        tree_classifier.fit(X_train, y_train)
+        print('Czas fit() sklearn. :', time.time() - start)
+        y_pred = tree_classifier.predict(X_test)
+        our_preds = np.array(y_pred, dtype=int)
+        sklearn_id3_acc = metrics.accuracy_score(y_test, our_preds)
+
+        print(f"Dokładność obu implementacji jest zbliżona: - {acc}=={sklearn_id3_acc}")
+        print('=========================================================')
+
 
 def experiment3():
     # Eksperyment 3
@@ -66,6 +109,7 @@ def experiment3():
                 model_param_instances_per_classifier,
                 model_param_id3_to_NBC,
                 model_param_num_of_classifiers)
+
 def experiment_eval_ID3_NBC(dataset="corona"):
     print('\n=====================')
     print(f"Only ID3 and only NBC evaluation on dataset {dataset}")
@@ -89,4 +133,4 @@ def experiment_eval_ID3_NBC(dataset="corona"):
     print(f"ID3: {id3_acc}")
 
 if __name__ == "__main__":
-    experiment3()
+    experiment2()
