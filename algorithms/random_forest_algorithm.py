@@ -32,7 +32,7 @@ class RandomForest:
         X_train = X_train.sample(frac=self.attributes_percentage, axis=1)
         self.attributes.append(X_train.columns)
         X_train['results'] = y_train
-        X_train = X_train.sample(frac=self.attributes_percentage)
+        X_train = X_train.sample(frac=self.percent_samples)
         return X_train.drop(columns=['results']), X_train['results']
 
     def predict(self, X_test) -> pd.Series:
