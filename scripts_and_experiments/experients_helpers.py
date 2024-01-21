@@ -113,7 +113,7 @@ def format_label(val):
         return str(val)
 
 
-def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str):
+def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str):
     plt.figure(figsize=(8, 6))
 
     if isinstance(x_val[0], Iterable):
@@ -126,4 +126,6 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.ylabel(y_label)
     plt.title(f"{y_label} = f({x_label})")
     plt.grid(True)
-    plt.show()
+
+    file_name = f'../images/{class_name}_plot.png'
+    plt.savefig(file_name)

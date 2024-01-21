@@ -108,6 +108,7 @@ def classifier_ratio_influence():
     classifiers_ratios = [[0, 1], [1, 0]]
 
     X, y = get_dataset_divorce()
+    class_name = y.name
 
     acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_classifier_ratio(experiments_number, X, y, n,
                                                                             samples_percentage, attributes_percentage,
@@ -120,7 +121,7 @@ def classifier_ratio_influence():
     print(f"CONF MATRIX AVG")
     print(avg_conf_mtx)
 
-    plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratios', 'Accuracy')
+    plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratios', 'Accuracy', class_name)
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
@@ -130,7 +131,7 @@ def examples_number_in_node_influence():
 
 
 if __name__ == "__main__":
-    id3_comparison()
-    id3_comparison()
-    nbc_comparison()
+    #id3_comparison()
+    #id3_comparison()
+    #nbc_comparison()
     classifier_ratio_influence()
