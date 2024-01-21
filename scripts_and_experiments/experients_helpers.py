@@ -9,34 +9,6 @@ from sklearn.naive_bayes import CategoricalNB
 from typing import List, Tuple, Iterable
 from algorithms.random_forest_algorithm import RandomForest
 
-# TO FINALNIE ODPADA
-def random_forest_experiments(experiments_number: int, X, y, n_list: List[int], samples_percentage_list: List[float],
-                              attributes_percentage_list: List[float], classifiers: List[float],
-                              classifiers_ratios: List[List[float]]):
-    accuracies = []
-    accuracies_std_list = []
-    f1_scores = []
-    f1_scores_std_list = []
-    conf_matrices = []
-
-    for samples_percentage in samples_percentage_list:
-        for attributes_percentage in attributes_percentage_list:
-            for classifiers_ratio in classifiers_ratios:
-                for n in n_list:
-                    random_forest = RandomForest(n, samples_percentage, attributes_percentage, classifiers,
-                                                 classifiers_ratio)
-                    for _ in range(experiments_number):
-                        acc, acc_std, f1, f1_std, conf_matrix = eval_cross_validation(X, y, random_forest)
-                        accuracies.append(acc)
-                        accuracies_std_list.append(acc_std)
-                        f1_scores.append(f1)
-                        f1_scores_std_list.append(f1_std)
-                        conf_matrices.append(conf_matrix)
-
-    # TO TRZEBA JAKOŚ OGARNĄC SENSOWNIE
-    return (round(np.mean(accuracies)), round(np.mean(f1_scores)),
-            np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
-
 
 def rf_experiment_classifier_ratio(experiments_number: int, X, y, n: int, samples_percentage: float,
                                    attributes_percentage: float, classifiers: List,
@@ -63,7 +35,82 @@ def rf_experiment_classifier_ratio(experiments_number: int, X, y, n: int, sample
             f1_scores.append(f1)
             f1_scores_std_list.append(f1_std)
             conf_matrices.append(conf_matrix)
-            print(f"Experiment nr {i+1}")
+            print(f"Experiment nr {i + 1}")
+        print(f"Po eksperymentach accuracy: {accuracies}")
+        final_accuracies.append(round(np.mean(accuracies), 2))
+        final_f1_scores.append(round(np.mean(f1_scores), 2))
+        final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
+        # Wyliczanie złożonego odchylenia standardowego jako pierwiastek z sumy kwadratów odchyleń standardowych
+        final_accuracies_std_list.append(round(np.sqrt(np.mean(accuracies_std_list) ** 2 + np.std(accuracies) ** 2), 2))
+        final_f1_scores_std_list.append(round(np.sqrt(np.mean(f1_scores_std_list) ** 2 + np.std(f1_scores) ** 2), 2))
+
+    return (final_accuracies, final_accuracies_std_list, final_f1_scores, final_f1_scores_std_list,
+            np.round(np.sum(final_conf_matrices, axis=0) / len(final_conf_matrices)))
+
+
+def rf_experiment_samples_percentages(experiments_number: int, X, y, n: int, samples_percentages: List[float],
+                                      attributes_percentage: float, classifiers: List,
+                                      classifiers_ratio: List[float]) \
+        -> Tuple[List[float], List[float], List[float], List[float], np.ndarray]:
+    final_accuracies = []
+    final_accuracies_std_list = []
+    final_f1_scores = []
+    final_f1_scores_std_list = []
+    final_conf_matrices = []
+
+    for samples_percentage in samples_percentages:
+        accuracies = []
+        accuracies_std_list = []
+        f1_scores = []
+        f1_scores_std_list = []
+        conf_matrices = []
+        random_forest = RandomForest(n, samples_percentage, attributes_percentage, classifiers, classifiers_ratio)
+
+        for i in range(experiments_number):
+            acc, acc_std, f1, f1_std, conf_matrix = eval_cross_validation(X, y, random_forest)
+            accuracies.append(acc)
+            accuracies_std_list.append(acc_std)
+            f1_scores.append(f1)
+            f1_scores_std_list.append(f1_std)
+            conf_matrices.append(conf_matrix)
+            print(f"Experiment nr {i + 1}")
+        print(f"Po eksperymentach accuracy: {accuracies}")
+        final_accuracies.append(round(np.mean(accuracies), 2))
+        final_f1_scores.append(round(np.mean(f1_scores), 2))
+        final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
+        # Wyliczanie złożonego odchylenia standardowego jako pierwiastek z sumy kwadratów odchyleń standardowych
+        final_accuracies_std_list.append(np.sqrt(np.mean(accuracies_std_list) ** 2) + np.std(accuracies) ** 2)
+        final_f1_scores_std_list.append(np.sqrt(np.mean(f1_scores_std_list) ** 2) + np.std(f1_scores) ** 2)
+
+    return (final_accuracies, final_accuracies_std_list, final_f1_scores, final_f1_scores_std_list,
+            np.round(np.sum(final_conf_matrices, axis=0) / len(final_conf_matrices)))
+
+
+def rf_experiment_tree_number(experiments_number: int, X, y, n_list: List[int], samples_percentage: float,
+                              attributes_percentage: float, classifiers: List, classifiers_ratio: List[float]) \
+        -> Tuple[List[float], List[float], List[float], List[float], np.ndarray]:
+    final_accuracies = []
+    final_accuracies_std_list = []
+    final_f1_scores = []
+    final_f1_scores_std_list = []
+    final_conf_matrices = []
+
+    for n in n_list:
+        accuracies = []
+        accuracies_std_list = []
+        f1_scores = []
+        f1_scores_std_list = []
+        conf_matrices = []
+        random_forest = RandomForest(n, samples_percentage, attributes_percentage, classifiers, classifiers_ratio)
+
+        for i in range(experiments_number):
+            acc, acc_std, f1, f1_std, conf_matrix = eval_cross_validation(X, y, random_forest)
+            accuracies.append(acc)
+            accuracies_std_list.append(acc_std)
+            f1_scores.append(f1)
+            f1_scores_std_list.append(f1_std)
+            conf_matrices.append(conf_matrix)
+            print(f"Experiment nr {i + 1}")
         print(f"Po eksperymentach accuracy: {accuracies}")
         final_accuracies.append(round(np.mean(accuracies), 2))
         final_f1_scores.append(round(np.mean(f1_scores), 2))
