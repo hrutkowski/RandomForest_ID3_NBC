@@ -1,7 +1,5 @@
 import numpy as np
 import time
-
-import numpy as np
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import CategoricalNB
@@ -12,15 +10,12 @@ from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
 from experients_helpers import *
 from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dataset_divorce, get_dataset_glass, \
-    get_dataset_loan_approval
+    get_dataset_loan_approval, load_proper_dataset
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
 # potrzeby implementacji ID3 z gotową implementacją z biblioteki sklearn
 def id3_comparison():
-    print('======================== EKSPERYMENT: Porównanie ID3 ============================')
-    print('Porównanie wybranej implementacji ID3 z implementacją drzewa z biblioteki sklearn')
-
     datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
 
     for dataset in datasets:
@@ -50,9 +45,6 @@ def id3_comparison():
 
 # Porównanie klasyfikacji przy użyciu Naszej implementacji algorytmu NBC z gotową implementacją z biblioteki sklearn
 def nbc_comparison():
-    print('====================== EKSPERYMENT: Porównanie NBC ==========================')
-    print('Porównanie własnej implementacji NBC z implementacją z biblioteki sklearn')
-
     datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
 
     for dataset in datasets:
@@ -80,10 +72,8 @@ def nbc_comparison():
         print('=========================================================')
 
 
-def tree_number_influence():
-    print('====================== EKSPERYMENT: Optymalizacja liczby drzew =============================')
-    print('Badanie wpływu różnych liczby drzew w lesie losowym')
-
+# Porównanie wpływu liczby drzew na klasyfikację
+def tree_number_influence(dataset_name: str):
     experiments_number = 3
     n = [10, 100]
     samples_percentage = 0.75
@@ -91,7 +81,7 @@ def tree_number_influence():
     classifiers = [NBC, ID3]
     classifiers_ratios = [0.5, 0.5]
 
-    X, y = get_dataset_divorce()
+    X, y = load_proper_dataset(dataset_name)
     class_name = y.name
 
     acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_tree_number(experiments_number, X, y, n,
@@ -110,7 +100,7 @@ def tree_number_influence():
 
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
-def classifier_ratio_influence():
+def classifier_ratio_influence(dataset_name: str):
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
     print('Badanie wpływu różnych proporcji między rodzajami klasyfikatorów w lesie losowym')
 
@@ -121,7 +111,7 @@ def classifier_ratio_influence():
     classifiers = [NBC, ID3]
     classifiers_ratios = [[0, 1], [1, 0]]
 
-    X, y = get_dataset_divorce()
+    X, y = load_proper_dataset(dataset_name)
     class_name = y.name
 
     acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_classifier_ratio(experiments_number, X, y, n,
@@ -140,10 +130,7 @@ def classifier_ratio_influence():
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
-def samples_percentage_influence():
-    print('====================== EKSPERYMENT: Optymalizacja liczby przykładów w węźle =============================')
-    print('Badanie wpływu różnej liczby przykładów w weźle w lesie losowym')
-
+def samples_percentage_influence(dataset_name: str):
     experiments_number = 3
     n = 10
     samples_percentage = [0.25, 0.75]
@@ -151,7 +138,7 @@ def samples_percentage_influence():
     classifiers = [NBC, ID3]
     classifiers_ratios = [0.5, 0.5]
 
-    X, y = get_dataset_divorce()
+    X, y = load_proper_dataset(dataset_name)
     class_name = y.name
 
     acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_samples_percentages(experiments_number, X, y, n,
@@ -174,5 +161,5 @@ if __name__ == "__main__":
     # id3_comparison()
     # id3_comparison()
     # nbc_comparison()
-    classifier_ratio_influence()
-    samples_percentage_influence()
+    classifier_ratio_influence('divorce')
+    # samples_percentage_influence('divorce')

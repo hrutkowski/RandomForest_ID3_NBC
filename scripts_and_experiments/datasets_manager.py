@@ -28,16 +28,6 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     df = df.astype('int32')
 
-    """
-    for column in df.columns:
-        none_count = df[column].isna().sum()
-
-        if none_count > 0:
-            print(f"Column '{column}' has {none_count} occurrences of None.")
-        else:
-            print(f"Column '{column}' has no occurrences of None.")
-    """
-
     X = df.drop(['Corona'], axis=1)
     y = df['Corona']
 
@@ -101,4 +91,14 @@ def get_class_distribution_for_dataset(get_dataset_function):
     plt.show()
 
 
-#get_class_distribution_for_dataset(get_dataset_loan_approval())
+def load_proper_dataset(dataset_name: str) -> Tuple[pd.DataFrame, pd.Series]:
+    match dataset_name:
+        case 'corona':
+            X, y = get_dataset_corona()
+        case 'glass':
+            X, y = get_dataset_glass()
+        case 'loan_approval':
+            X, y = get_dataset_loan_approval()
+        case _:
+            X, y = get_dataset_divorce()
+    return X, y
