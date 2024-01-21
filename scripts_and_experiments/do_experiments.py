@@ -17,11 +17,8 @@ from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dat
     get_dataset_loan_approval
 from scripts_and_experiments.experiment_scripts import cross_validation_score, test_accuracy, get_conf_matrix, \
     run_experiment
+from experients_helpers import random_forest_experiments
 
-
-def random_forest_experiment(X, y, samples_percentage_list: List[float], attributes_percentage_list: List[float],
-                             classifiers: List[float], classifiers_ratioss: List[List[float]]):
-    print("elo")
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
@@ -92,32 +89,34 @@ def nbc_comparison():
 def tree_number_influence():
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
     print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
+
+    experiments_number = 3
     samples_percentage_list = [0.75]
     attributes_percentage_list = [0.75]
     classifiers = [NBC, ID3]
-    classifiers_ratioss = [[0.5, 0.5]]
-    n = [wefewf]
+    classifiers_ratios = [[0.5, 0.5]]
+    n = [1, 2, 5, 10, 20, 50, 100, 200, 500]
 
     X, y = get_dataset_divorce()
 
-    random_forest_experiment(X, y, n, samples_percentage_list, attributes_percentage_list,
-                             classifiers, classifiers_ratioss)
+    random_forest_experiments(experiments_number, X, y, n, samples_percentage_list, attributes_percentage_list,
+                             classifiers, classifiers_ratios)
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
 def classifier_ratio_influence():
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
     print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
 
-    experiments_number = 1
+    experiments_number = 3
     samples_percentage_list = [0.75]
     attributes_percentage_list = [0.75]
     classifiers = [NBC, ID3]
-    classifiers_ratioss = [[0, 1], [0.25, 0.75], [0.5, 0.5], [0.75, 0.25], [1, 0]]
+    classifiers_ratios = [[0, 1], [0.25, 0.75], [0.5, 0.5], [0.75, 0.25], [1, 0]]
 
     X, y = get_dataset_divorce()
 
-    random_forest_experiment(X, y, samples_percentage_list, attributes_percentage_list,
-                             classifiers, classifiers_ratioss)
+    random_forest_experiments(experiments_number, X, y, samples_percentage_list, attributes_percentage_list,
+                             classifiers, classifiers_ratios)
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
@@ -126,5 +125,6 @@ def examples_number_in_node_influence():
     print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
 
 
-id3_comparison()
-nbc_comparison()
+if __name__ == "__main__":
+    id3_comparison()
+    nbc_comparison()
