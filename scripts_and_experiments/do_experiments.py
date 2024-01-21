@@ -1,6 +1,5 @@
 import numpy as np
 import time
-
 import numpy as np
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
@@ -114,12 +113,12 @@ def classifier_ratio_influence():
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
     print('Badanie wpływu różnych proporcji między rodzajami klasyfikatorów w lesie losowym')
 
-    experiments_number = 3
+    experiments_number = 2
     n = 10
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
-    classifiers_ratios = [[0, 1], [1, 0]]
+    classifiers_ratios = [[0, 1], [0.5, 0.5], [1, 0]]
 
     X, y = get_dataset_divorce()
     class_name = y.name
@@ -136,7 +135,9 @@ def classifier_ratio_influence():
     print(avg_conf_mtx)
 
     plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratio', 'Accuracy', class_name)
-    plot_results(classifiers_ratios, f1, f1_std, 'Classifiers ratio', 'F1 Score', class_name)
+    plot_results(classifiers_ratios, f1, f1_std, 'Classifiers ratio', 'F1_Score', class_name)
+    generate_excel_table(classifiers_ratios, acc, acc_std, f1, f1_std, 'Classifiers ratio', 'Accuracy', 'F1_Score', class_name)
+    #generate_excel_table(classifiers_ratios, f1, f1_std, 'Classifiers ratio', 'F1_Score', class_name)
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
@@ -144,7 +145,7 @@ def samples_percentage_influence():
     print('====================== EKSPERYMENT: Optymalizacja liczby przykładów w węźle =============================')
     print('Badanie wpływu różnej liczby przykładów w weźle w lesie losowym')
 
-    experiments_number = 3
+    experiments_number = 1
     n = 10
     samples_percentage = [0.25, 0.75]
     attributes_percentage = 0.75
@@ -175,4 +176,4 @@ if __name__ == "__main__":
     # id3_comparison()
     # nbc_comparison()
     classifier_ratio_influence()
-    samples_percentage_influence()
+    # samples_percentage_influence()

@@ -4,8 +4,10 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split, KFold, StratifiedKFold
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from matplotlib import pyplot as plt
+from openpyxl import Workbook
 from sklearn import metrics
 from sklearn.naive_bayes import CategoricalNB
+import os
 from typing import List, Tuple, Iterable
 from algorithms.random_forest_algorithm import RandomForest
 
@@ -174,5 +176,30 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.title(f"{y_label} = f({x_label})")
     plt.grid(True)
 
-    file_name = f'../images/{class_name}_plot.png'
+    file_name = f'../images/{class_name}_plot{y_label}.png'
     plt.savefig(file_name)
+
+
+# def generate_excel_table(x_val: List, y_val: List[float], y_std_val: List[float], y2_val: List[float], y_f1_val: List[float], x_label: str, y_label: str, y1_label: str, class_name: str):
+#     file_name = f'../tables/{class_name}_table_{y_label}_{y1_label}.xlsx'
+#
+#     if os.path.exists(file_name):
+#         df_existing = pd.read_excel(file_name, engine='openpyxl')
+#         data = {f'{x_label}': x_val, y_label: y_val, f'{y_label}_std': y_std_val, y1_label: y2_val, f'{y1_label}_std': y_f1_val}
+#         df = pd.DataFrame(data)
+#         df_combined = pd.concat([df_existing, df], ignore_index=True)
+#
+#         with pd.ExcelWriter(file_name, engine='openpyxl', mode='xlsxwriter') as writer:
+#             df_combined.to_excel(writer, index=False, sheet_name='Sheet1')
+#     else:
+#         data = {f'{x_label}': x_val, y_label: y_val, f'{y_label}_std': y_std_val, y1_label: y2_val,
+#                 f'{y1_label}_std': y_f1_val}
+#         df = pd.DataFrame(data)
+#         df.to_excel(file_name, index=False)
+
+def generate_excel_table(x_val: List, y_val: List[float], y_std_val: List[float], y2_val: List[float], y_f1_val: List[float], x_label: str, y_label: str, y1_label: str, class_name: str):
+    data = {f'{x_label}': x_val, y_label: y_val, f'{y_label}_std': y_std_val, y1_label: y2_val, f'{y1_label}_std': y_f1_val}
+    df = pd.DataFrame(data)
+
+    file_name = f'../tables/{class_name}_table_{y_label}_{y1_label}.xlsx'
+    df.to_excel(file_name, index=False)
