@@ -1,24 +1,16 @@
 import pandas as pd
 import numpy as np
 import time
-from sklearn.model_selection import train_test_split, KFold, StratifiedKFold
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
-from matplotlib import pyplot as plt
 from sklearn import metrics
-from itertools import product
 from sklearn.naive_bayes import CategoricalNB
-from typing import List, Tuple
+from sklearn.model_selection import train_test_split
 
 from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
 from sklearn.tree import DecisionTreeClassifier
-from algorithms.random_forest_algorithm import RandomForest
 from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dataset_divorce, get_dataset_glass, \
     get_dataset_loan_approval
-from scripts_and_experiments.experiment_scripts import cross_validation_score, test_accuracy, get_conf_matrix, \
-    run_experiment
-from experients_helpers import random_forest_experiments
-
+from experients_helpers import rf_experiment_classifier_ratio, plot_results
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
@@ -87,8 +79,8 @@ def nbc_comparison():
 
 
 def tree_number_influence():
-    print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
-    print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
+    print('====================== EKSPERYMENT: Optymalizacja liczby drzew =============================')
+    print('Badanie wpływu różnych liczby drzew w lesie losowym')
 
     experiments_number = 3
     samples_percentage_list = [0.75]
@@ -99,32 +91,46 @@ def tree_number_influence():
 
     X, y = get_dataset_divorce()
 
-    random_forest_experiments(experiments_number, X, y, n, samples_percentage_list, attributes_percentage_list,
-                             classifiers, classifiers_ratios)
+    rf_experiment_classifier_ratio(experiments_number, X, y, n, samples_percentage_list, attributes_percentage_list,
+                                   classifiers, classifiers_ratios)
+
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
 def classifier_ratio_influence():
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
-    print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
+    print('Badanie wpływu różnych proporcji między rodzajami klasyfikatorów w lesie losowym')
 
     experiments_number = 3
-    samples_percentage_list = [0.75]
-    attributes_percentage_list = [0.75]
+    n = 10
+    samples_percentage = 0.75
+    attributes_percentage = 0.75
     classifiers = [NBC, ID3]
-    classifiers_ratios = [[0, 1], [0.25, 0.75], [0.5, 0.5], [0.75, 0.25], [1, 0]]
+    classifiers_ratios = [[0, 1], [1, 0]]
 
     X, y = get_dataset_divorce()
 
-    random_forest_experiments(experiments_number, X, y, samples_percentage_list, attributes_percentage_list,
-                             classifiers, classifiers_ratios)
+    acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_classifier_ratio(experiments_number, X, y, n,
+                                                                            samples_percentage, attributes_percentage,
+                                                                            classifiers, classifiers_ratios)
+
+    print(f"Accuracy = {acc}")
+    print(f"Accuracy std = {acc_std}")
+    print(f"F1 Score = {f1}")
+    print(f"F1 Score std = {f1_std}")
+    print(f"CONF MATRIX AVG")
+    print(avg_conf_mtx)
+
+    plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratios', 'Accuracy')
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
 def examples_number_in_node_influence():
-    print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
-    print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
+    print('====================== EKSPERYMENT: Optymalizacja liczby przykładów w węźle =============================')
+    print('Badanie wpływu różnej liczby przykładów w weźle w lesie losowym')
 
 
 if __name__ == "__main__":
     id3_comparison()
+    id3_comparison()
     nbc_comparison()
+    classifier_ratio_influence()
