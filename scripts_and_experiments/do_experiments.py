@@ -27,10 +27,10 @@ def random_forest_experiment(X, y, samples_percentage_list: List[float], attribu
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
 # potrzeby implementacji ID3 z gotową implementacją z biblioteki sklearn
 def id3_comparison():
-    print('====================== EKSPERYMENT: Porównanie ID3 ==========================')
-    print('Porównanie wybranej implementacji ID3 z implementacją z biblioteki sklearn')
+    print('======================== EKSPERYMENT: Porównanie ID3 ============================')
+    print('Porównanie wybranej implementacji ID3 z implementacją drzewa z biblioteki sklearn')
 
-    datasets = [get_dataset_corona(), get_dataset_divorce()]
+    datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
 
     for dataset in datasets:
         X, y = dataset
@@ -38,15 +38,14 @@ def id3_comparison():
         print("Zbiór", label_column)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
 
-        t = ID3(min_sample_num=5)
+        t = ID3()
         start = time.time()
         t.fit(X_train, y_train)
         print('Czas fit() id3 :', time.time() - start)
-        # acc, f1 = t.eval(X_test, y_test)
-        predictions, err_fp, err_fn = t.predict_all(X_test, y_test)
-        acc = (predictions == y_test.values).mean()
+        predictions = t.predict(X_test)
+        our_acc = metrics.accuracy_score(y_test, predictions)
 
-        tree_classifier = DecisionTreeClassifier(random_state=42)
+        tree_classifier = DecisionTreeClassifier(criterion="entropy")
         start = time.time()
         tree_classifier.fit(X_train, y_train)
         print('Czas fit() sklearn. :', time.time() - start)
@@ -54,7 +53,7 @@ def id3_comparison():
         our_preds = np.array(y_pred, dtype=int)
         sklearn_id3_acc = metrics.accuracy_score(y_test, our_preds)
 
-        print(f"Dokładność obu implementacji jest zbliżona: - {acc}=={sklearn_id3_acc}")
+        print(f"Dokładność obu implementacji jest zbliżona: - {our_acc}=={sklearn_id3_acc}")
         print('=========================================================')
 
 
@@ -63,7 +62,7 @@ def nbc_comparison():
     print('====================== EKSPERYMENT: Porównanie NBC ==========================')
     print('Porównanie własnej implementacji NBC z implementacją z biblioteki sklearn')
 
-    datasets = [get_dataset_corona(), get_dataset_divorce()]
+    datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
 
     for dataset in datasets:
         X, y = dataset
@@ -73,21 +72,20 @@ def nbc_comparison():
 
         nbc_classifier = NBC(1)
         start = time.time()
-        nbc_classifier.fit(X_train, y_train, label_column)
+        nbc_classifier.fit(X_train, y_train)
         print('Czas fit() impl. wł. :', time.time() - start)
         y_pred = nbc_classifier.predict(X_test)
-        our_preds = np.array(y_pred, dtype=int)
-        our_nbc_acc = metrics.accuracy_score(y_test, our_preds)
+        our_nbc_acc = metrics.accuracy_score(y_test, y_pred)
 
         clf = CategoricalNB()
         start = time.time()
         clf.fit(X_train, y_train)
         print('Czas fit() sklearn:', time.time() - start)
-        y_pred = clf.predict(X_test)
-        sklearn_nbc_acc = metrics.accuracy_score(y_test, y_pred)
+        y_pred_sklearn = clf.predict(X_test)
+        sklearn_nbc_acc = metrics.accuracy_score(y_test, y_pred_sklearn)
 
-        print(f"Predykcje są takie same: {(our_preds == y_pred).all()}")
-        print(f"Dokładność jest taka sama: {(our_preds == y_pred).all()} - {sklearn_nbc_acc}=={our_nbc_acc}")
+        print(f"Accuracy score dla impl. wł.: {our_nbc_acc}")
+        print(f"Accuracy score dla sklearn.: {sklearn_nbc_acc}")
         print('=========================================================')
 
 
@@ -126,3 +124,7 @@ def classifier_ratio_influence():
 def examples_number_in_node_influence():
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
     print('Badanie wpływu różnych proprocji między rodzajami klasyfikatorów w lesie lodowym')
+
+
+id3_comparison()
+nbc_comparison()

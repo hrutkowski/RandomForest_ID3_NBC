@@ -1,6 +1,8 @@
 import pandas as pd
 from typing import Tuple
 from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
@@ -10,7 +12,7 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     pd.set_option('display.max_columns', None)
 
-    # deleting all nan in df columns
+    # Usuwanie NaN z kolumn
     for column in df.columns:
         df = df.dropna(subset=[column])
 
@@ -45,11 +47,6 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 def get_dataset_divorce() -> Tuple[pd.DataFrame, pd.Series]:
     df = pd.read_csv("../datasets/divorce.csv")
 
-    # columns_list = df.columns
-    # for column in df.columns:
-    #     unique_values = df[column].unique()
-    #     #print(f"Unique values in column '{column}': {unique_values}")
-
     X = df.drop(['Divorce_Y_N'], axis=1)
     y = df['Divorce_Y_N']
 
@@ -57,7 +54,13 @@ def get_dataset_divorce() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_glass() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("datasets/glass.csv")
+    df = pd.read_csv("../datasets/glass.csv")
+
+    num_bins = 6
+
+    # Dyskretyzowanie ciągłych wartości w kolumnach na 6 przedziałow
+    for col in df.columns[:-1]:
+        df[col] = pd.qcut(df[col], q=num_bins, labels=False, precision=0, duplicates='drop')
 
     X = df.drop(['Type'], axis=1)
     y = df['Type']
@@ -66,11 +69,36 @@ def get_dataset_glass() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_loan_approval() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("datasets/loan_approval.csv")
+    df = pd.read_csv("../datasets/loan_approval.csv")
 
     df = df.drop(['loan_id'], axis=1)
 
-    X = df.drop(['loan_status'], axis=1)
-    y = df['loan_status']
+    label_encoder = LabelEncoder()
+    for i in [' education', ' self_employed', ' loan_status']:
+        df[i] = label_encoder.fit_transform(df[i])
+
+    unique_counts = df.nunique()
+
+    # Dyskretyzowanie ciągłych wartości w kolumnach
+
+    columns_to_transform = [' income_annum', ' loan_amount', ' loan_term', ' cibil_score',
+                            ' residential_assets_value', ' commercial_assets_value',
+                            ' luxury_assets_value', ' bank_asset_value']
+
+    for column in columns_to_transform:
+        df[column] = pd.qcut(df[column], q=[0, 0.2, 0.4, 0.6, 0.8, 1], labels=False)
+
+    X = df.drop([' loan_status'], axis=1)
+    y = df[' loan_status']
 
     return X, y
+
+
+def get_class_distribution_for_dataset(get_dataset_function):
+    X, y = get_dataset_function
+    sns.countplot(x=y)
+    plt.title('Class Distribution')
+    plt.show()
+
+
+#get_class_distribution_for_dataset(get_dataset_loan_approval())

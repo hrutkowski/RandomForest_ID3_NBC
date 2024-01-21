@@ -6,17 +6,13 @@ from sklearn.naive_bayes import GaussianNB
 
 
 def test_nbc_for_dataset(X, y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
     # print("Dimension of X:", X.shape)
     # print("Dimension of y:", y.shape)
     nbc = NBC(1)
     nbc.fit(X_train, y_train)
     scores = nbc.score(X_test, y_test)
-    print(scores)
-
-    nb_classifier = GaussianNB()
-    nb_classifier.fit(X_train, y_train)
-    y_pred = nb_classifier.predict(X_test)
+    y_pred = nbc.predict(X_test)
 
     accuracy = metrics.accuracy_score(y_test, y_pred)
     f1_macro = metrics.f1_score(y_test, y_pred, average='macro')
@@ -29,11 +25,19 @@ def test_nbc_for_dataset(X, y):
 
     return scores
 
+
 print("======== DIVORCE ==========")
 X, y = get_dataset_divorce()
 test_nbc_for_dataset(X, y)
 
-
 print("\n======== CORONA ==========")
 X, y = get_dataset_corona()
+test_nbc_for_dataset(X, y)
+
+print("\n======== GLASS ==========")
+X, y = get_dataset_glass()
+test_nbc_for_dataset(X, y)
+
+print("\n======== LOAN APPROVAL ==========")
+X, y = get_dataset_loan_approval()
 test_nbc_for_dataset(X, y)

@@ -12,7 +12,7 @@ from datasets_manager import *
 #
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-X, y = get_dataset_corona()
+X, y = get_dataset_loan_approval()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 random_forest = RandomForest(n=10, classifiers=[ID3, NBC], classifiers_ratios=[0.5, 0.5])
