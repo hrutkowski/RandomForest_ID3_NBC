@@ -11,30 +11,18 @@ from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dat
 # potrzeby implementacji ID3 z gotową implementacją z biblioteki sklearn
 def id3_comparison():
     datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
+    dataset_labels = ['Corona', 'Divorce', 'Glass', 'Loan Approval']
+    experiments_number = 3
+    avg_accuracies = []
+    avg_accuracies_std_list = []
+    avg_f1_scores = []
+    avg_f1_scores_std_list = []
+    avg_conf_matrices = []
 
-    for dataset in datasets:
-        X, y = dataset
-        label_column = y.name
-        print("Zbiór", label_column)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    out_id3 = ID3()
+    library_id3 = DecisionTreeClassifier(criterion="entropy")
+    compare_classifiers()
 
-        t = ID3()
-        start = time.time()
-        t.fit(X_train, y_train)
-        print('Czas fit() id3 :', time.time() - start)
-        predictions = t.predict(X_test)
-        our_acc = metrics.accuracy_score(y_test, predictions)
-
-        tree_classifier = DecisionTreeClassifier(criterion="entropy")
-        start = time.time()
-        tree_classifier.fit(X_train, y_train)
-        print('Czas fit() sklearn. :', time.time() - start)
-        y_pred = tree_classifier.predict(X_test)
-        our_preds = np.array(y_pred, dtype=int)
-        sklearn_id3_acc = metrics.accuracy_score(y_test, our_preds)
-
-        print(f"Dokładność obu implementacji jest zbliżona: - {our_acc}=={sklearn_id3_acc}")
-        print('=========================================================')
 
 
 # Porównanie klasyfikacji przy użyciu Naszej implementacji algorytmu NBC z gotową implementacją z biblioteki sklearn

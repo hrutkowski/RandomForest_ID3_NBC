@@ -1,15 +1,50 @@
-import pandas as pd
+import time
 import numpy as np
 import seaborn as sns
-from sklearn.model_selection import train_test_split, KFold, StratifiedKFold
-from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
+from sklearn.model_selection import train_test_split, KFold
 from matplotlib import pyplot as plt
 from openpyxl import Workbook
 from sklearn import metrics
-from sklearn.naive_bayes import CategoricalNB
 import os
 from typing import List, Tuple, Iterable
 from algorithms.random_forest_algorithm import RandomForest
+
+
+def compare_classifiers(datasets, experiments_number, classifier_1, classifier_2):
+    clf1_avg_accuracies = []
+    clf2_avg_accuracies = []
+    clf1_avg_accuracies_std_list = []
+    clf2_avg_accuracies_std_list = []
+    clf1_avg_f1_scores = []
+    clf2_avg_f1_scores = []
+    clf1_avg_f1_scores_std_list = []
+    clf2_avg_f1_scores_std_list = []
+    clf1_avg_conf_matrices = []
+    clf2_avg_conf_matrices = []
+    clf1_avg_time_list = []
+    clf2_avg_time_list = []
+
+    for dataset in datasets:
+        X, y = dataset
+        eval_classifier(classifier_1, experiments_number, X, y)
+        eval_classifier(classifier_2, experiments_number, X, y)
+
+
+def eval_classifier(clf, experiments_number, X, y) -> Tuple[float, float, float, float, float, np.ndarray]:
+    avg_acc_list = []
+    avg_f1_list = []
+
+
+    for _ in range(experiments_number):
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+        clf_start = time.time()
+        clf.fit(X_train, y_train)
+        clf_time = time.time() - clf_start
+        y_pred = np.array(clf.predict(X_test), dtype=int)
+
+        return (accuracy_score(y_test, y_pred), f1_score(y_test, y_pred, average='macro'), clf_time,
+                confusion_matrix(y_test, y_pred))
 
 
 def rf_experiment_classifier_ratio(experiments_number: int, X, y, n: int, samples_percentage: float,
