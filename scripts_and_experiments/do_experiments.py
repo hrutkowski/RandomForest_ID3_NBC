@@ -76,6 +76,7 @@ def tree_number_influence(dataset_name: str):
     classifiers_ratios = [0.5, 0.5]
 
     X, y = load_proper_dataset(dataset_name)
+    class_labels = get_class_labels_for_dataset(dataset_name)
 
     acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_tree_number(experiments_number, X, y, n,
                                                                        samples_percentage, attributes_percentage,
@@ -88,8 +89,11 @@ def tree_number_influence(dataset_name: str):
     print(f"CONF MATRIX AVG")
     print(avg_conf_mtx)
 
-    plot_results(n, acc, acc_std, 'n', 'Accuracy', dataset_name)
-    plot_results(n, f1, f1_std, 'n ratio', 'F1 Score', dataset_name)
+    plot_results(n, acc, acc_std, 'n', 'Accuracy', dataset_name, 'number_of_trees')
+    plot_results(n, f1, f1_std, 'n ratio', 'F1 Score', dataset_name, 'number_of_trees')
+    generate_excel_table(n, acc, acc_std, f1, f1_std, 'Number of trees', 'Accuracy', 'F1_Score',
+                         dataset_name, 'number_of_trees')
+    plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'number_of_trees')
 
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
@@ -157,5 +161,6 @@ def samples_percentage_influence(dataset_name: str):
 if __name__ == "__main__":
     # id3_comparison()
     # nbc_comparison()
-    classifier_ratio_influence('corona')
-    samples_percentage_influence('corona')
+    tree_number_influence('glass')
+    classifier_ratio_influence('glass')
+    samples_percentage_influence('glass')
