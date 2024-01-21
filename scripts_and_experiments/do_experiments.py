@@ -1,16 +1,18 @@
-import pandas as pd
 import numpy as np
 import time
+
+import numpy as np
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import CategoricalNB
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
 
 from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
-from sklearn.tree import DecisionTreeClassifier
+from experients_helpers import *
 from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dataset_divorce, get_dataset_glass, \
     get_dataset_loan_approval
-from experients_helpers import rf_experiment_classifier_ratio, plot_results
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
@@ -83,16 +85,28 @@ def tree_number_influence():
     print('Badanie wpływu różnych liczby drzew w lesie losowym')
 
     experiments_number = 3
-    samples_percentage_list = [0.75]
-    attributes_percentage_list = [0.75]
+    n = [10, 100]
+    samples_percentage = 0.75
+    attributes_percentage = 0.75
     classifiers = [NBC, ID3]
-    classifiers_ratios = [[0.5, 0.5]]
-    n = [1, 2, 5, 10, 20, 50, 100, 200, 500]
+    classifiers_ratios = [0.5, 0.5]
 
     X, y = get_dataset_divorce()
+    class_name = y.name
 
-    rf_experiment_classifier_ratio(experiments_number, X, y, n, samples_percentage_list, attributes_percentage_list,
-                                   classifiers, classifiers_ratios)
+    acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_tree_number(experiments_number, X, y, n,
+                                                                       samples_percentage, attributes_percentage,
+                                                                       classifiers, classifiers_ratios)
+
+    print(f"Accuracy = {acc}")
+    print(f"Accuracy std = {acc_std}")
+    print(f"F1 Score = {f1}")
+    print(f"F1 Score std = {f1_std}")
+    print(f"CONF MATRIX AVG")
+    print(avg_conf_mtx)
+
+    plot_results(n, acc, acc_std, 'n', 'Accuracy', class_name)
+    plot_results(n, f1, f1_std, 'n ratio', 'F1 Score', class_name)
 
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
@@ -121,17 +135,44 @@ def classifier_ratio_influence():
     print(f"CONF MATRIX AVG")
     print(avg_conf_mtx)
 
-    plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratios', 'Accuracy', class_name)
+    plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratio', 'Accuracy', class_name)
+    plot_results(classifiers_ratios, f1, f1_std, 'Classifiers ratio', 'F1 Score', class_name)
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
-def examples_number_in_node_influence():
+def samples_percentage_influence():
     print('====================== EKSPERYMENT: Optymalizacja liczby przykładów w węźle =============================')
     print('Badanie wpływu różnej liczby przykładów w weźle w lesie losowym')
 
+    experiments_number = 3
+    n = 10
+    samples_percentage = [0.25, 0.75]
+    attributes_percentage = 0.75
+    classifiers = [NBC, ID3]
+    classifiers_ratios = [0.5, 0.5]
+
+    X, y = get_dataset_divorce()
+    class_name = y.name
+
+    acc, acc_std, f1, f1_std, avg_conf_mtx = rf_experiment_samples_percentages(experiments_number, X, y, n,
+                                                                               samples_percentage,
+                                                                               attributes_percentage,
+                                                                               classifiers, classifiers_ratios)
+
+    print(f"Accuracy = {acc}")
+    print(f"Accuracy std = {acc_std}")
+    print(f"F1 Score = {f1}")
+    print(f"F1 Score std = {f1_std}")
+    print(f"CONF MATRIX AVG")
+    print(avg_conf_mtx)
+
+    plot_results(samples_percentage, acc, acc_std, 'Samples percentage', 'Accuracy', class_name)
+    plot_results(samples_percentage, f1, f1_std, 'Samples percentage', 'F1 Score', class_name)
+
 
 if __name__ == "__main__":
-    #id3_comparison()
-    #id3_comparison()
-    #nbc_comparison()
+    # id3_comparison()
+    # id3_comparison()
+    # nbc_comparison()
     classifier_ratio_influence()
+    samples_percentage_influence()
