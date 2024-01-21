@@ -4,8 +4,10 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split, KFold, StratifiedKFold
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 from matplotlib import pyplot as plt
+from openpyxl import Workbook
 from sklearn import metrics
 from sklearn.naive_bayes import CategoricalNB
+import os
 from typing import List, Tuple, Iterable
 from algorithms.random_forest_algorithm import RandomForest
 
@@ -131,8 +133,22 @@ def eval_cross_validation(X, y, model, splits_number: int = 5) -> Tuple[float, f
     kf = KFold(n_splits=splits_number, shuffle=True, random_state=42)
 
     for train_index, test_index in kf.split(X, y):
-        X_train, y_train = X.loc[train_index, :], y.loc[train_index]
-        X_test, y_test = X.loc[test_index, :], y.loc[test_index]
+        train_index_list = train_index.tolist()
+        test_index_list = test_index.tolist()
+        # print(train_index_list)
+        # print(test_index_list)
+        #missing_indices = set(train_index_list) - set(X.index)
+        #print(missing_indices)
+
+        valid_train_indices = [idx for idx in train_index_list if idx in X.index]
+        valid_test_indices = [idx for idx in test_index_list if idx in X.index]
+        X_train, y_train = X.loc[valid_train_indices, :], y.loc[valid_train_indices]
+        X_test, y_test = X.loc[valid_test_indices, :], y.loc[valid_test_indices]
+
+        # print(train_index)
+        # print(test_index)
+        # X_train, y_train = X.loc[train_index, :], y.loc[train_index]
+        # X_test, y_test = X.loc[test_index, :], y.loc[test_index]
         model.fit(X_train, y_train)
         accuracy, f1_score, conf_matrix = model.eval(X_test, y_test)
         accuracies.append(accuracy)
@@ -143,14 +159,14 @@ def eval_cross_validation(X, y, model, splits_number: int = 5) -> Tuple[float, f
             np.std(f1_scores, axis=0), np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
 
 
-def plot_confusion_matrix(conf_mtx: np.ndarray, class_labels: list):
+def plot_confusion_matrix(conf_mtx: np.ndarray, class_labels: list, class_name: str, exp_name: str):
     sns.set(font_scale=1.4)
     plt.figure(figsize=(8, 6))
     sns.heatmap(conf_mtx, annot=True, fmt='g', cmap='Blues', xticklabels=class_labels, yticklabels=class_labels)
     plt.xlabel('Predicted values')
     plt.ylabel('True values')
     plt.title('Confusion Matrix')
-    plt.show()
+    plt.savefig(f'../matrices/{class_name}_{exp_name}.png')
 
 
 def format_label(val):
@@ -160,7 +176,7 @@ def format_label(val):
         return str(val)
 
 
-def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str):
+def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str, exp_type: str):
     plt.figure(figsize=(8, 6))
 
     if isinstance(x_val[0], Iterable):
@@ -174,5 +190,13 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.title(f"{y_label} = f({x_label})")
     plt.grid(True)
 
-    file_name = f'../images/{class_name}_plot.png'
+    file_name = f'../images/{class_name}_plot{y_label}_{exp_type}.png'
     plt.savefig(file_name)
+
+
+def generate_excel_table(x_val: List, y_val: List[float], y_std_val: List[float], y2_val: List[float], y_f1_val: List[float], x_label: str, y_label: str, y1_label: str, class_name: str, exp_type: str):
+    data = {f'{x_label}': x_val, y_label: y_val, f'{y_label}_std': y_std_val, y1_label: y2_val, f'{y1_label}_std': y_f1_val}
+    df = pd.DataFrame(data)
+
+    file_name = f'../tables/{class_name}_table_{y_label}_{y1_label}_{exp_type}.xlsx'
+    df.to_excel(file_name, index=False)
