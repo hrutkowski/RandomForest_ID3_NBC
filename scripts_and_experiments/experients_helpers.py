@@ -81,8 +81,8 @@ def rf_experiment_samples_percentages(experiments_number: int, X, y, n: int, sam
         final_f1_scores.append(round(np.mean(f1_scores), 2))
         final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
         # Wyliczanie złożonego odchylenia standardowego jako pierwiastek z sumy kwadratów odchyleń standardowych
-        final_accuracies_std_list.append(np.sqrt(np.mean(accuracies_std_list) ** 2) + np.std(accuracies) ** 2)
-        final_f1_scores_std_list.append(np.sqrt(np.mean(f1_scores_std_list) ** 2) + np.std(f1_scores) ** 2)
+        final_accuracies_std_list.append(round(np.sqrt(np.mean(accuracies_std_list) ** 2 + np.std(accuracies) ** 2), 2))
+        final_f1_scores_std_list.append(round(np.sqrt(np.mean(f1_scores_std_list) ** 2 + np.std(f1_scores) ** 2), 2))
 
     return (final_accuracies, final_accuracies_std_list, final_f1_scores, final_f1_scores_std_list,
             np.round(np.sum(final_conf_matrices, axis=0) / len(final_conf_matrices)))
@@ -118,8 +118,8 @@ def rf_experiment_tree_number(experiments_number: int, X, y, n_list: List[int], 
         final_f1_scores.append(round(np.mean(f1_scores), 2))
         final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
         # Wyliczanie złożonego odchylenia standardowego jako pierwiastek z sumy kwadratów odchyleń standardowych
-        final_accuracies_std_list.append(np.sqrt(np.mean(accuracies_std_list) ** 2) + np.std(accuracies) ** 2)
-        final_f1_scores_std_list.append(np.sqrt(np.mean(f1_scores_std_list) ** 2) + np.std(f1_scores) ** 2)
+        final_accuracies_std_list.append(round(np.sqrt(np.mean(accuracies_std_list) ** 2 + np.std(accuracies) ** 2), 2))
+        final_f1_scores_std_list.append(round(np.sqrt(np.mean(f1_scores_std_list) ** 2 + np.std(f1_scores) ** 2), 2))
 
     return (final_accuracies, final_accuracies_std_list, final_f1_scores, final_f1_scores_std_list,
             np.round(np.sum(final_conf_matrices, axis=0) / len(final_conf_matrices)))
@@ -177,6 +177,7 @@ def format_label(val):
 
 
 def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str, exp_type: str):
+    plt.style.use('default')
     plt.figure(figsize=(8, 6))
 
     if isinstance(x_val[0], Iterable):
@@ -189,6 +190,9 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.ylabel(y_label)
     plt.title(f"{y_label} = f({x_label})")
     plt.grid(True)
+
+    plt.xscale('linear')
+    plt.yscale('linear')
 
     file_name = f'../images/{class_name}_plot{y_label}_{exp_type}.png'
     plt.savefig(file_name)
