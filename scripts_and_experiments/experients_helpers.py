@@ -27,24 +27,23 @@ def compare_classifiers(datasets, experiments_number, classifier_1, classifier_2
 
     for dataset in datasets:
         X, y = dataset
-        eval_classifier(classifier_1, experiments_number, X, y)
-        eval_classifier(classifier_2, experiments_number, X, y)
+        for _ in range(experiments_number):
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+            eval_classifier(classifier_1, X_train, X_test, y_train, y_test)
+            eval_classifier(classifier_2, X_train, X_test, y_train, y_test)
 
 
-def eval_classifier(clf, experiments_number, X, y) -> Tuple[float, float, float, float, float, np.ndarray]:
+def eval_classifier(clf, X_train, X_test, y_train, y_test) -> Tuple[float, float, float, np.ndarray]:
     avg_acc_list = []
     avg_f1_list = []
 
+    clf_start = time.time()
+    clf.fit(X_train, y_train)
+    clf_time = time.time() - clf_start
+    y_pred = np.array(clf.predict(X_test), dtype=int)
 
-    for _ in range(experiments_number):
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
-        clf_start = time.time()
-        clf.fit(X_train, y_train)
-        clf_time = time.time() - clf_start
-        y_pred = np.array(clf.predict(X_test), dtype=int)
-
-        return (accuracy_score(y_test, y_pred), f1_score(y_test, y_pred, average='macro'), clf_time,
-                confusion_matrix(y_test, y_pred))
+    return (accuracy_score(y_test, y_pred), f1_score(y_test, y_pred, average='macro'), clf_time,
+            confusion_matrix(y_test, y_pred))
 
 
 def rf_experiment_classifier_ratio(experiments_number: int, X, y, n: int, samples_percentage: float,
