@@ -1,69 +1,61 @@
-import time
+from sklearn.naive_bayes import CategoricalNB
 from sklearn.tree import DecisionTreeClassifier
 from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
 from experients_helpers import *
-from scripts_and_experiments.datasets_manager import get_dataset_corona, get_dataset_divorce, get_dataset_glass, \
-    get_dataset_loan_approval, load_proper_dataset, get_class_labels_for_dataset
+from scripts_and_experiments.datasets_manager import *
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
 # potrzeby implementacji ID3 z gotową implementacją z biblioteki sklearn
-def id3_comparison():
-    datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
+def id3_comparison(dataset_name: str):
+    experiments_number = 10
 
-    for dataset in datasets:
-        X, y = dataset
-        label_column = y.name
-        print("Zbiór", label_column)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    X, y = load_proper_dataset(dataset_name)
+    class_labels = get_class_labels_for_dataset(dataset_name)
 
-        t = ID3()
-        start = time.time()
-        t.fit(X_train, y_train)
-        print('Czas fit() id3 :', time.time() - start)
-        predictions = t.predict(X_test)
-        our_acc = metrics.accuracy_score(y_test, predictions)
+    our_id3 = ID3()
+    library_id3 = DecisionTreeClassifier(criterion="entropy")
 
-        tree_classifier = DecisionTreeClassifier(criterion="entropy")
-        start = time.time()
-        tree_classifier.fit(X_train, y_train)
-        print('Czas fit() sklearn. :', time.time() - start)
-        y_pred = tree_classifier.predict(X_test)
-        our_preds = np.array(y_pred, dtype=int)
-        sklearn_id3_acc = metrics.accuracy_score(y_test, our_preds)
+    clf1_name = 'Our_ID3'
+    clf2_name = 'Library_ID3'
 
-        print(f"Dokładność obu implementacji jest zbliżona: - {our_acc}=={sklearn_id3_acc}")
-        print('=========================================================')
+    (acc_1, acc_std_1, f1_1, f1_std_1, time_1, time_std_1, avg_conf_mtx_1, acc_2, acc_std_2, f1_2, f1_std_2, time_2,
+     time_std_1, avg_conf_mtx_2) = compare_classifiers(experiments_number, X, y, our_id3, library_id3)
+
+    results_clf1 = [acc_1, acc_std_1, f1_1, f1_std_1, time_1, time_std_1]
+    results_clf2 = [acc_2, acc_std_2, f1_2, f1_std_2, time_2, time_std_1]
+
+    plot_confusion_matrix(avg_conf_mtx_1, class_labels, dataset_name, clf1_name)
+    plot_confusion_matrix(avg_conf_mtx_2, class_labels, dataset_name, clf2_name)
+
+    save_classifiers_comparison_results(results_clf1, results_clf2, clf1_name, clf2_name, dataset_name, 'comparison')
 
 
 # Porównanie klasyfikacji przy użyciu Naszej implementacji algorytmu NBC z gotową implementacją z biblioteki sklearn
-def nbc_comparison():
-    datasets = [get_dataset_corona(), get_dataset_divorce(), get_dataset_glass(), get_dataset_loan_approval()]
+def nbc_comparison(dataset_name: str):
+    experiments_number = 10
 
-    for dataset in datasets:
-        X, y = dataset
-        label_column = y.name
-        print("Zbiór", label_column)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    X, y = load_proper_dataset(dataset_name)
+    class_labels = get_class_labels_for_dataset(dataset_name)
 
-        nbc_classifier = NBC(1)
-        start = time.time()
-        nbc_classifier.fit(X_train, y_train)
-        print('Czas fit() impl. wł. :', time.time() - start)
-        y_pred = nbc_classifier.predict(X_test)
-        our_nbc_acc = metrics.accuracy_score(y_test, y_pred)
+    our_nbc = NBC(1)
+    library_nbc = CategoricalNB()
 
-        clf = CategoricalNB()
-        start = time.time()
-        clf.fit(X_train, y_train)
-        print('Czas fit() sklearn:', time.time() - start)
-        y_pred_sklearn = clf.predict(X_test)
-        sklearn_nbc_acc = metrics.accuracy_score(y_test, y_pred_sklearn)
+    clf1_name = 'Our_NBC'
+    clf2_name = 'Library_NBC'
 
-        print(f"Accuracy score dla impl. wł.: {our_nbc_acc}")
-        print(f"Accuracy score dla sklearn.: {sklearn_nbc_acc}")
-        print('=========================================================')
+    (acc_1, acc_std_1, f1_1, f1_std_1, time_1, time_std_1, avg_conf_mtx_1, acc_2, acc_std_2, f1_2, f1_std_2, time_2,
+     time_std_1, avg_conf_mtx_2) = compare_classifiers(experiments_number, X, y, our_nbc, library_nbc)
+
+    results_clf1 = [acc_1, acc_std_1, f1_1, f1_std_1, time_1, time_std_1]
+    results_clf2 = [acc_2, acc_std_2, f1_2, f1_std_2, time_2, time_std_1]
+
+    plot_confusion_matrix(avg_conf_mtx_1, class_labels, dataset_name, clf1_name)
+    plot_confusion_matrix(avg_conf_mtx_2, class_labels, dataset_name, clf2_name)
+
+    save_classifiers_comparison_results(results_clf1, results_clf2, clf1_name, clf2_name, dataset_name, 'comparison')
+
 
 
 # Porównanie wpływu liczby drzew na klasyfikację
@@ -130,8 +122,8 @@ def classifier_ratio_influence(dataset_name: str):
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
 def samples_percentage_influence(dataset_name: str):
-    experiments_number = 25
-    n = 100
+    experiments_number = 10
+    n = 30
     samples_percentage = [0.25, 0.5, 0.75]
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -159,12 +151,6 @@ def samples_percentage_influence(dataset_name: str):
 
 
 if __name__ == "__main__":
-    tree_number_influence('glass')
-    classifier_ratio_influence('divorce')
-    samples_percentage_influence('loan_approval')
-
-    tree_number_influence('loan_approval')
-    classifier_ratio_influence('corona')
-    samples_percentage_influence('corona')
-
+    #id3_comparison('corona')
+    nbc_comparison('glass')
 
