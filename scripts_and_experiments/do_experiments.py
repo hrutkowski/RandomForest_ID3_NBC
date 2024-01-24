@@ -68,8 +68,8 @@ def nbc_comparison():
 
 # Porównanie wpływu liczby drzew na klasyfikację
 def tree_number_influence(dataset_name: str):
-    experiments_number = 25
-    n = [10, 20, 50, 100, 200, 250]
+    experiments_number = 1
+    n = [10, 20, 30]
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -101,8 +101,8 @@ def classifier_ratio_influence(dataset_name: str):
     print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
     print('Badanie wpływu różnych proporcji między rodzajami klasyfikatorów w lesie losowym')
 
-    experiments_number = 25
-    n = 100
+    experiments_number = 1
+    n = 10
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -130,8 +130,8 @@ def classifier_ratio_influence(dataset_name: str):
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
 def samples_percentage_influence(dataset_name: str):
-    experiments_number = 25
-    n = 100
+    experiments_number = 15
+    n = 30
     samples_percentage = [0.25, 0.5, 0.75]
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -159,12 +159,12 @@ def samples_percentage_influence(dataset_name: str):
 
 
 if __name__ == "__main__":
-    tree_number_influence('glass')
-    classifier_ratio_influence('divorce')
-    samples_percentage_influence('loan_approval')
-
-    tree_number_influence('loan_approval')
-    classifier_ratio_influence('corona')
-    samples_percentage_influence('corona')
+    # tree_number_influence('letter')
+    classifier_ratio_influence('letter')
+    # samples_percentage_influence('loan_approval')
+    #
+    #tree_number_influence('loan_approval')
+    #classifier_ratio_influence('corona')
+    #samples_percentage_influence('corona')
 
 

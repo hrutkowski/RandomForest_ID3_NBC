@@ -96,6 +96,20 @@ def get_dataset_loan_approval() -> Tuple[pd.DataFrame, pd.Series]:
     return X, y
 
 
+def get_dataset_letter_recognition() -> Tuple[pd.DataFrame, pd.Series]:
+    df = pd.read_csv("../datasets/letter-recognition.csv")
+    #df = df.head(1000)
+
+    le = LabelEncoder()
+    for i in ['letter']:
+        df[i] = le.fit_transform(df[i])
+
+    X = df.drop(['letter'], axis=1)
+    y = df['letter']
+
+    return X, y
+
+
 def get_class_distribution_for_dataset(get_dataset_function):
     X, y = get_dataset_function
     sns.countplot(x=y)
@@ -110,6 +124,8 @@ def load_proper_dataset(dataset_name: str) -> Tuple[pd.DataFrame, pd.Series]:
         X, y = get_dataset_glass()
     elif dataset_name == 'loan_approval':
         X, y = get_dataset_loan_approval()
+    elif dataset_name == 'letter':
+        X, y = get_dataset_letter_recognition()
     else:
         X, y = get_dataset_divorce()
 
@@ -126,6 +142,9 @@ def get_class_labels_for_dataset(dataset_name: str):
     elif dataset_name == 'loan_approval':
         df = pd.read_csv("../datasets/loan_approval.csv")
         unique_values = df[' loan_status'].unique()
+    elif dataset_name == 'letter':
+        df = pd.read_csv("../datasets/letter-recognition.csv")
+        unique_values = df['letter'].unique()
     else:
         df = pd.read_csv("../datasets/divorce.csv")
         unique_values = df['Divorce_Y_N'].unique()

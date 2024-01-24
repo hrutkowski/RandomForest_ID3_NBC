@@ -125,7 +125,7 @@ def rf_experiment_tree_number(experiments_number: int, X, y, n_list: List[int], 
             np.round(np.sum(final_conf_matrices, axis=0) / len(final_conf_matrices)))
 
 
-def eval_cross_validation(X, y, model, splits_number: int = 5) -> Tuple[float, float, float, float, np.ndarray]:
+def eval_cross_validation(X, y, model, splits_number: int = 3) -> Tuple[float, float, float, float, np.ndarray]:
     accuracies = []
     f1_scores = []
     conf_matrices = []
