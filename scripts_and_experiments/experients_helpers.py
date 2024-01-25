@@ -21,7 +21,9 @@ def compare_classifiers(exp_num: int, X, y, clf1, clf2) -> Tuple[float, float, f
     time_list_clf2 = []
 
     for _ in range(exp_num):
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=26)
+        rnd_state = np.random.randint(1, 1000)
+        print(rnd_state)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=rnd_state)
         acc_clf1, f1_clf1, time_clf1, conf_mtx_clf1 = eval_classifier(clf1, X_train, X_test, y_train, y_test)
         acc_clf2, f1_clf2, time_clf2, conf_mtx_clf2 = eval_classifier(clf2, X_train, X_test, y_train, y_test)
 
@@ -220,9 +222,7 @@ def format_label(val):
         return str(val)
 
 
-def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str,
-                 exp_type: str):
-    plt.style.use('default')
+def plot_results(x_val, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str, exp_type: str):
     plt.figure(figsize=(8, 6))
 
     if isinstance(x_val[0], Iterable):
@@ -235,9 +235,6 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.ylabel(y_label)
     plt.title(f"{y_label} = f({x_label})")
     plt.grid(True)
-
-    plt.xscale('linear')
-    plt.yscale('linear')
 
     file_name = f'../images/{class_name}_plot{y_label}_{exp_type}.png'
     plt.savefig(file_name)
