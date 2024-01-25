@@ -198,6 +198,27 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.savefig(file_name)
 
 
+def plot_results_for_classifier_ratios(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str,
+                 exp_type: str):
+    plt.style.use('default')
+    plt.figure(figsize=(8, 6))
+
+    plt.errorbar(range(len(x_val)), y_val, yerr=y_std_val, fmt='o', label=x_label)
+
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title(f"{y_label} = f({x_label})")
+    plt.grid(True)
+
+    plt.xticks(range(len(x_val)), [str(val) for val in x_val])
+
+    plt.xscale('linear')
+    plt.yscale('linear')
+
+    file_name = f'../images/{class_name}_plot_{y_label}_{exp_type}.png'
+    plt.savefig(file_name)
+
+
 def generate_excel_table(x_val: List, y_val: List[float], y_std_val: List[float], y2_val: List[float], y_f1_val: List[float], x_label: str, y_label: str, y1_label: str, class_name: str, exp_type: str):
     data = {f'{x_label}': x_val, y_label: y_val, f'{y_label}_std': y_std_val, y1_label: y2_val, f'{y1_label}_std': y_f1_val}
     df = pd.DataFrame(data)

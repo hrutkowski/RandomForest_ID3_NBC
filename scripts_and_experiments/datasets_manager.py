@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from typing import Tuple
 from sklearn.preprocessing import LabelEncoder
@@ -29,14 +30,7 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
     le = LabelEncoder()
     for i in ['Corona', 'Known_contact']:
-        print(f"Before encoding {i} values:")
-        print(df[i].value_counts())  # Print the original values before encoding
-
-        df[i] = le.fit_transform(df[i])  # Apply the LabelEncoder
-
-        print(f"After encoding {i} values:")
-        print(df[i].value_counts())  # Print the new values after encoding
-        print("\n")
+        df[i] = le.fit_transform(df[i])
 
     df = df.astype('int32')
 
@@ -135,7 +129,8 @@ def load_proper_dataset(dataset_name: str) -> Tuple[pd.DataFrame, pd.Series]:
 def get_class_labels_for_dataset(dataset_name: str):
     if dataset_name == 'corona':
         df = pd.read_csv('../datasets/corona.csv', low_memory=False)
-        unique_values = df['Corona'].unique()
+        #unique_values = df['Corona'].unique()
+        unique_values = np.array(['negative', 'other', 'positive'])
     elif dataset_name == 'glass':
         df = pd.read_csv("../datasets/glass.csv")
         unique_values = df['Type'].unique()
