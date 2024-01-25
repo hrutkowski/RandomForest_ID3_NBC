@@ -8,7 +8,7 @@ from .nbc_classifier import NBC
 
 class RandomForest:
 
-    def __init__(self, n: int = 100, samples_percentage: float = 0.5, attributes_percentage: float = 0.5,
+    def __init__(self, n: int = 100, samples_percentage: float = 0.2, attributes_percentage: float = 0.5,
                  classifiers: List = [ID3, NBC], classifiers_ratios: List = [0.5, 0.5]):
         self.attributes = []
         self.forest = []
