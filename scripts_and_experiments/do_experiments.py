@@ -10,6 +10,8 @@ from scripts_and_experiments.datasets_manager import *
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
 # potrzeby implementacji ID3 z gotową implementacją z biblioteki sklearn
 def id3_comparison(dataset_name: str):
+    print('===========================================================================================================')
+    print("ROZPOCZĘCIE badania porównującego wybraną przez nas implementację ID3 z implementacją z biblioteki sklearn\n")
     experiments_number = 25
 
     X, y = load_proper_dataset(dataset_name)
@@ -32,9 +34,14 @@ def id3_comparison(dataset_name: str):
 
     save_classifiers_comparison_results(results_clf1, results_clf2, clf1_name, clf2_name, dataset_name, 'comparison')
 
+    print("KONIEC badania porównującego wybraną przez nas implementację ID3 z implementacją z biblioteki sklearn\n")
+    print('===========================================================================================================')
 
 # Porównanie klasyfikacji przy użyciu Naszej implementacji algorytmu NBC z gotową implementacją z biblioteki sklearn
 def nbc_comparison(dataset_name: str):
+    print('===========================================================================================================')
+    print("ROZPOCZĘCIE badania porównującego naszą implementację NBC z implementacją z biblioteki sklearn\n")
+
     experiments_number = 25
 
     X, y = load_proper_dataset(dataset_name)
@@ -57,9 +64,14 @@ def nbc_comparison(dataset_name: str):
 
     save_classifiers_comparison_results(results_clf1, results_clf2, clf1_name, clf2_name, dataset_name, 'comparison')
 
+    print("KONIEC badania porównującego naszą implementację NBC z implementacją z biblioteki sklearn\n")
+    print('===========================================================================================================')
 
 # Porównanie wpływu liczby drzew na klasyfikację
 def tree_number_influence(dataset_name: str):
+    print('===========================================================================================================')
+    print("ROZPOCZĘCIE badania wpływu liczby drzew na klasyfikację\n")
+
     experiments_number = 25
     n = [10, 20, 50, 100]
 
@@ -81,9 +93,14 @@ def tree_number_influence(dataset_name: str):
                          dataset_name, 'number_of_trees')
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'number_of_trees')
 
+    print("KONIEC badania wpływu liczby drzew na klasyfikację\n")
+    print('===========================================================================================================')
 
-# Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
+# Porównanie wpływu proporcji między rodzajami klasyfikatorów na klasyfikację
 def classifier_ratio_influence(dataset_name: str):
+    print('===========================================================================================================')
+    print("ROZPOCZĘCIE badania wpływu proporcji między rodzajami klasyfikatorów na klasyfikację\n")
+
     experiments_number = 25
     n = 30
 
@@ -105,9 +122,14 @@ def classifier_ratio_influence(dataset_name: str):
                          dataset_name, 'classifiers_ratios')
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'classifiers_ratios')
 
+    print("KONIEC badania wpływu proporcji między rodzajami klasyfikatorów na klasyfikację\n")
+    print('===========================================================================================================')
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
 def samples_percentage_influence(dataset_name: str):
+    print('===========================================================================================================')
+    print("ROZPOCZĘCIE badania wpływu ilości przykładów w węźle na klasyfikację\n")
+
     experiments_number = 25
     n = 30
 
@@ -130,6 +152,8 @@ def samples_percentage_influence(dataset_name: str):
                          dataset_name, 'samples_percentage')
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'samples_percentage')
 
+    print("KONIEC badania wpływu ilości przykładów w węźle na klasyfikację\n")
+    print('===========================================================================================================')
 
 if __name__ == "__main__":
     nbc_comparison('divorce')
