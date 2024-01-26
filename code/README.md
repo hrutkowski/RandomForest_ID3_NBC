@@ -16,7 +16,7 @@ Należy w nim podać pojedynczo lub w kolejce doświadczenia, które chcemy wyko
 Do każdego doświdczenia należy w argumencie wpisać ciąg znaków odpowiadający danemu zbiorowi danych.
 Możliwe opcje:
 
-    'corona' -> corona.csd
+    'corona' -> corona.csv
     'divorce' -> divorce.csv
     'glass' -> glass.csv
     'letter' -> letter-recognition.csv
@@ -29,5 +29,5 @@ Możliwe opcje:
     seaborn
     openpyxl
 
-# Uruchamianie badań (programu):
+# Uruchamianie badań (programu) z poziomu folderu /code:
     python main.py

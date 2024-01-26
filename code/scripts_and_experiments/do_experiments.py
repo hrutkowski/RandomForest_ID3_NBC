@@ -76,7 +76,6 @@ def tree_number_influence(dataset_name: str):
 
     experiments_number = 25
     n = [10, 20, 50, 100]
-
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -106,7 +105,6 @@ def classifier_ratio_influence(dataset_name: str):
 
     experiments_number = 25
     n = 30
-
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -136,8 +134,7 @@ def samples_percentage_influence(dataset_name: str):
 
     experiments_number = 25
     n = 30
-
-    samples_percentage = [0.25, 0.5, 0.75]
+    samples_percentage = [0.2, 0.4, 0.6, 0.8]
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
     classifiers_ratios = [0.5, 0.5]
