@@ -1,4 +1,4 @@
-#Adam Szumada
+# Autor: Adam Szumada
 import numpy as np
 import pandas as pd
 from typing import Tuple

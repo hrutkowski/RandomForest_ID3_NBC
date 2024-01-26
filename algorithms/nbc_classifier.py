@@ -1,4 +1,4 @@
-#Adam Szumada
+# Autor: Adam Szumada
 from sklearn import metrics
 import pandas as pd
 

@@ -1,4 +1,4 @@
-#Hubert Rutkowski
+# Autor: Hubert Rutkowski
 import time
 import numpy as np
 import seaborn as sns
@@ -229,7 +229,7 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.xscale('linear')
     plt.yscale('linear')
 
-    file_name = f'../images/{class_name}_plot{y_label}_{exp_type}.png'
+    file_name = f'../images/{class_name}_plot_{y_label}_{exp_type}.png'
     plt.savefig(file_name)
 
 

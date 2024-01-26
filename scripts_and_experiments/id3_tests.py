@@ -1,3 +1,4 @@
+# Autor: Adam Szumada
 # Plik używany do testowania działania ID3 podczas implementacji dla naszych zbiorów danych
 from datasets_manager import *
 from sklearn.model_selection import train_test_split

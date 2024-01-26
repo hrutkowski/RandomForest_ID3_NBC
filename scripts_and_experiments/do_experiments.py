@@ -1,4 +1,4 @@
-# Hubert Rutkowski
+# Autor: Hubert Rutkowski
 from sklearn.naive_bayes import CategoricalNB
 from sklearn.tree import DecisionTreeClassifier
 from algorithms.id3_classifier import ID3
@@ -60,7 +60,7 @@ def nbc_comparison(dataset_name: str):
 
 # Porównanie wpływu liczby drzew na klasyfikację
 def tree_number_influence(dataset_name: str):
-    experiments_number = 5
+    experiments_number = 25
     n = [10, 20, 50, 100]
 
     samples_percentage = 0.75
@@ -84,7 +84,7 @@ def tree_number_influence(dataset_name: str):
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
 def classifier_ratio_influence(dataset_name: str):
-    experiments_number = 5
+    experiments_number = 25
     n = 30
 
     samples_percentage = 0.75
@@ -108,7 +108,7 @@ def classifier_ratio_influence(dataset_name: str):
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
 def samples_percentage_influence(dataset_name: str):
-    experiments_number = 5
+    experiments_number = 25
     n = 30
 
     samples_percentage = [0.25, 0.5, 0.75]
@@ -132,8 +132,8 @@ def samples_percentage_influence(dataset_name: str):
 
 
 if __name__ == "__main__":
-    # id3_comparison('corona')
-    # nbc_comparison('glass')
-    tree_number_influence('divorce')
-    classifier_ratio_influence('divorce')
+    id3_comparison('corona')
+    nbc_comparison('corona')
+    # tree_number_influence('divorce')
+    # classifier_ratio_influence('divorce')
     # samples_percentage_influence('divorce')

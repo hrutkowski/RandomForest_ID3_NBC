@@ -1,3 +1,4 @@
+# Autor: Hubert Rutkowski
 # Plik używany do testowania działania lasu losowego podczas implementacji dla naszych zbiorów danych
 from sklearn.model_selection import train_test_split
 from algorithms.nbc_classifier import NBC
