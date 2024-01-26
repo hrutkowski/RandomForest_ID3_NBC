@@ -3,8 +3,8 @@ from sklearn.naive_bayes import CategoricalNB
 from sklearn.tree import DecisionTreeClassifier
 from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
-from experients_helpers import *
 from scripts_and_experiments.datasets_manager import *
+from scripts_and_experiments.experients_helpers import *
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
@@ -154,15 +154,3 @@ def samples_percentage_influence(dataset_name: str):
 
     print("KONIEC badania wpływu ilości przykładów w węźle na klasyfikację\n")
     print('===========================================================================================================')
-
-if __name__ == "__main__":
-    nbc_comparison('divorce')
-    nbc_comparison('corona')
-    id3_comparison('loan_approval')
-    id3_comparison('corona')
-    tree_number_influence('glass')
-    tree_number_influence('letter')
-    samples_percentage_influence('glass')
-    samples_percentage_influence('corona')
-    classifier_ratio_influence('divorce')
-    classifier_ratio_influence('letter')

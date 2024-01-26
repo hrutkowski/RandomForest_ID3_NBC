@@ -8,7 +8,7 @@ import seaborn as sns
 
 
 def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv('../datasets/corona.csv', low_memory=False)
+    df = pd.read_csv('datasets/corona.csv', low_memory=False)
 
     df = df.drop(['Ind_ID', 'Test_date'], axis=1)
     pd.set_option('display.max_columns', None)
@@ -40,7 +40,7 @@ def get_dataset_corona() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_divorce() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("../datasets/divorce.csv")
+    df = pd.read_csv("datasets/divorce.csv")
 
     X = df.drop(['Divorce_Y_N'], axis=1)
     y = df['Divorce_Y_N']
@@ -49,7 +49,7 @@ def get_dataset_divorce() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_glass() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("../datasets/glass.csv")
+    df = pd.read_csv("datasets/glass.csv")
 
     num_bins = 6
 
@@ -64,7 +64,7 @@ def get_dataset_glass() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_loan_approval() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("../datasets/loan_approval.csv")
+    df = pd.read_csv("datasets/loan_approval.csv")
 
     df = df.drop(['loan_id'], axis=1)
 
@@ -89,7 +89,7 @@ def get_dataset_loan_approval() -> Tuple[pd.DataFrame, pd.Series]:
 
 
 def get_dataset_letter_recognition() -> Tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv("../datasets/letter-recognition.csv")
+    df = pd.read_csv("datasets/letter-recognition.csv")
 
     le = LabelEncoder()
     for i in ['letter']:
@@ -125,19 +125,19 @@ def load_proper_dataset(dataset_name: str) -> Tuple[pd.DataFrame, pd.Series]:
 
 def get_class_labels_for_dataset(dataset_name: str):
     if dataset_name == 'corona':
-        df = pd.read_csv('../datasets/corona.csv', low_memory=False)
+        df = pd.read_csv('datasets/corona.csv', low_memory=False)
         unique_values = np.array(['negative', 'other', 'positive'])
     elif dataset_name == 'glass':
-        df = pd.read_csv("../datasets/glass.csv")
+        df = pd.read_csv("datasets/glass.csv")
         unique_values = df['Type'].unique()
     elif dataset_name == 'loan_approval':
-        df = pd.read_csv("../datasets/loan_approval.csv")
+        df = pd.read_csv("datasets/loan_approval.csv")
         unique_values = df[' loan_status'].unique()
     elif dataset_name == 'letter':
-        df = pd.read_csv("../datasets/letter-recognition.csv")
+        df = pd.read_csv("datasets/letter-recognition.csv")
         unique_values = df['letter'].unique()
     else:
-        df = pd.read_csv("../datasets/divorce.csv")
+        df = pd.read_csv("datasets/divorce.csv")
         unique_values = df['Divorce_Y_N'].unique()
 
     return unique_values
