@@ -22,6 +22,12 @@ Możliwe opcje:
     'letter' -> letter-recognition.csv
     'loan_approval -> loan_approval.csv
 
-# Uruchamianie badań (programu):
+# Potrzebne moduły:
+    scikit-learn
+    pandas
+    matplotlib
+    seaborn
+    openpyxl
 
+# Uruchamianie badań (programu):
     python main.py
