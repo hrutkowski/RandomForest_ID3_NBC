@@ -10,7 +10,7 @@ from scripts_and_experiments.datasets_manager import *
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
 # potrzeby implementacji ID3 z gotową implementacją z biblioteki sklearn
 def id3_comparison(dataset_name: str):
-    experiments_number = 10
+    experiments_number = 25
 
     X, y = load_proper_dataset(dataset_name)
     class_labels = get_class_labels_for_dataset(dataset_name)
@@ -35,7 +35,7 @@ def id3_comparison(dataset_name: str):
 
 # Porównanie klasyfikacji przy użyciu Naszej implementacji algorytmu NBC z gotową implementacją z biblioteki sklearn
 def nbc_comparison(dataset_name: str):
-    experiments_number = 10
+    experiments_number = 25
 
     X, y = load_proper_dataset(dataset_name)
     class_labels = get_class_labels_for_dataset(dataset_name)
@@ -132,8 +132,10 @@ def samples_percentage_influence(dataset_name: str):
 
 
 if __name__ == "__main__":
-    id3_comparison('corona')
+    nbc_comparison('divorce')
     nbc_comparison('corona')
+    id3_comparison('loan_approval')
+    id3_comparison('corona')
     # tree_number_influence('divorce')
     # classifier_ratio_influence('divorce')
     # samples_percentage_influence('divorce')
