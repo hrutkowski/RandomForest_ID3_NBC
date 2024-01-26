@@ -1,5 +1,5 @@
+# Plik używany do testowania działania lasu losowego podczas implementacji dla naszych zbiorów danych
 from sklearn.model_selection import train_test_split
-from algorithms.id3_classifier_old import ID3
 from algorithms.nbc_classifier import NBC
 from algorithms.id3_classifier import ID3
 from algorithms.random_forest_algorithm import RandomForest
@@ -8,14 +8,14 @@ from experients_helpers import *
 import numpy as np
 
 
-X, y = get_dataset_corona()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
+X, y = get_dataset_glass()
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-random_forest = RandomForest(n=10, classifiers=[ID3, NBC], classifiers_ratios=[0.5, 0.5])
+random_forest = RandomForest(n=10, classifiers=[ID3, NBC], classifiers_ratios=[0,5, 0,5])
 
 acc = 0
 f1 = 0
-razy = 3
+razy = 2
 matrices = []
 
 for i in range(razy):

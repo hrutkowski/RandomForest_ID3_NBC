@@ -1,14 +1,15 @@
+#Hubert Rutkowski
 import pandas as pd
 import numpy as np
 from typing import List, Tuple
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
-from .id3_classifier_old import ID3
-from .nbc_classifier import NBC
+from algorithms.id3_classifier import ID3
+from algorithms.nbc_classifier import NBC
 
 
 class RandomForest:
 
-    def __init__(self, n: int = 100, samples_percentage: float = 0.5, attributes_percentage: float = 0.5,
+    def __init__(self, n: int = 100, samples_percentage: float = 0.2, attributes_percentage: float = 0.5,
                  classifiers: List = [ID3, NBC], classifiers_ratios: List = [0.5, 0.5]):
         self.attributes = []
         self.forest = []

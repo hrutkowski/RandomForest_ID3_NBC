@@ -1,3 +1,4 @@
+#Adam Szumada
 from sklearn import metrics
 import pandas as pd
 
@@ -17,10 +18,10 @@ class NBC:
         self.alpha = 1.0 if alpha is None else alpha
         self.labels = None
         self.attributes = None
-        self.valuesPerAttribute = {}  # storing number of unique values per attribute
+        self.valuesPerAttribute = {}
         self.conditionalProbabilities = {}
-        self.pLabel = {}  # pstwo nalezenia do klasy
-        self.nLabelOccurrences = {}  # liczba wystapien klasy
+        self.pLabel = {}
+        self.nLabelOccurrences = {}
         self.labelColumn = None
 
     def count_conditional_probabilities(self, df):

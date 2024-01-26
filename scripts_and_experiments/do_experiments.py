@@ -1,3 +1,4 @@
+# Hubert Rutkowski
 from sklearn.naive_bayes import CategoricalNB
 from sklearn.tree import DecisionTreeClassifier
 from algorithms.id3_classifier import ID3
@@ -57,11 +58,11 @@ def nbc_comparison(dataset_name: str):
     save_classifiers_comparison_results(results_clf1, results_clf2, clf1_name, clf2_name, dataset_name, 'comparison')
 
 
-
 # Porównanie wpływu liczby drzew na klasyfikację
 def tree_number_influence(dataset_name: str):
-    experiments_number = 25
-    n = [10, 20, 50, 100, 200, 250]
+    experiments_number = 5
+    n = [10, 20, 50, 100]
+
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -74,15 +75,8 @@ def tree_number_influence(dataset_name: str):
                                                                        samples_percentage, attributes_percentage,
                                                                        classifiers, classifiers_ratios)
 
-    print(f"Accuracy = {acc}")
-    print(f"Accuracy std = {acc_std}")
-    print(f"F1 Score = {f1}")
-    print(f"F1 Score std = {f1_std}")
-    print(f"CONF MATRIX AVG")
-    print(avg_conf_mtx)
-
     plot_results(n, acc, acc_std, 'n', 'Accuracy', dataset_name, 'number_of_trees')
-    plot_results(n, f1, f1_std, 'n ratio', 'F1 Score', dataset_name, 'number_of_trees')
+    plot_results(n, f1, f1_std, 'n', 'F1 Score', dataset_name, 'number_of_trees')
     generate_excel_table(n, acc, acc_std, f1, f1_std, 'Number of trees', 'Accuracy', 'F1_Score',
                          dataset_name, 'number_of_trees')
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'number_of_trees')
@@ -90,11 +84,9 @@ def tree_number_influence(dataset_name: str):
 
 # Porównanie wpływu parametru proporcji między rodzajami klasyfikatorów na klasyfikację
 def classifier_ratio_influence(dataset_name: str):
-    print('====================== EKSPERYMENT: Optymalizacja stosunku klasyfikatorów =============================')
-    print('Badanie wpływu różnych proporcji między rodzajami klasyfikatorów w lesie losowym')
+    experiments_number = 5
+    n = 30
 
-    experiments_number = 25
-    n = 100
     samples_percentage = 0.75
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -107,23 +99,18 @@ def classifier_ratio_influence(dataset_name: str):
                                                                             samples_percentage, attributes_percentage,
                                                                             classifiers, classifiers_ratios)
 
-    print(f"Accuracy = {acc}")
-    print(f"Accuracy std = {acc_std}")
-    print(f"F1 Score = {f1}")
-    print(f"F1 Score std = {f1_std}")
-    print(f"CONF MATRIX AVG")
-    print(avg_conf_mtx)
-
     plot_results(classifiers_ratios, acc, acc_std, 'Classifiers ratio', 'Accuracy', dataset_name, 'classifiers_ratios')
     plot_results(classifiers_ratios, f1, f1_std, 'Classifiers ratio', 'F1_Score', dataset_name, 'classifiers_ratios')
-    generate_excel_table(classifiers_ratios, acc, acc_std, f1, f1_std, 'Classifiers ratio', 'Accuracy', 'F1_Score', dataset_name, 'classifiers_ratios')
+    generate_excel_table(classifiers_ratios, acc, acc_std, f1, f1_std, 'Classifiers ratio', 'Accuracy', 'F1_Score',
+                         dataset_name, 'classifiers_ratios')
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'classifiers_ratios')
 
 
 # Porównanie wpływu ilości przykładów w węźle na klasyfikację
 def samples_percentage_influence(dataset_name: str):
-    experiments_number = 10
+    experiments_number = 5
     n = 30
+
     samples_percentage = [0.25, 0.5, 0.75]
     attributes_percentage = 0.75
     classifiers = [NBC, ID3]
@@ -137,20 +124,16 @@ def samples_percentage_influence(dataset_name: str):
                                                                                attributes_percentage,
                                                                                classifiers, classifiers_ratios)
 
-    print(f"Accuracy = {acc}")
-    print(f"Accuracy std = {acc_std}")
-    print(f"F1 Score = {f1}")
-    print(f"F1 Score std = {f1_std}")
-    print(f"CONF MATRIX AVG")
-    print(avg_conf_mtx)
-
     plot_results(samples_percentage, acc, acc_std, 'Samples percentage', 'Accuracy', dataset_name, 'samples_percentage')
     plot_results(samples_percentage, f1, f1_std, 'Samples percentage', 'F1 Score', dataset_name, 'samples_percentage')
-    generate_excel_table(classifiers_ratios, acc, acc_std, f1, f1_std, 'Samples percentage', 'Accuracy', 'F1_Score', dataset_name, 'samples_percentage')
+    generate_excel_table(samples_percentage, acc, acc_std, f1, f1_std, 'Samples percentage', 'Accuracy', 'F1_Score',
+                         dataset_name, 'samples_percentage')
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'samples_percentage')
 
 
 if __name__ == "__main__":
-    #id3_comparison('corona')
-    nbc_comparison('glass')
-
+    # id3_comparison('corona')
+    # nbc_comparison('glass')
+    tree_number_influence('divorce')
+    classifier_ratio_influence('divorce')
+    # samples_percentage_influence('divorce')

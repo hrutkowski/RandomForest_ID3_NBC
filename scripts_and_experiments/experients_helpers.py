@@ -1,3 +1,4 @@
+#Hubert Rutkowski
 import time
 import numpy as np
 import seaborn as sns
@@ -5,6 +6,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from sklearn.model_selection import train_test_split, KFold
 from matplotlib import pyplot as plt
+from openpyxl import Workbook
 from typing import List, Tuple, Iterable
 from algorithms.random_forest_algorithm import RandomForest
 
@@ -22,7 +24,6 @@ def compare_classifiers(exp_num: int, X, y, clf1, clf2) -> Tuple[float, float, f
 
     for _ in range(exp_num):
         rnd_state = np.random.randint(1, 1000)
-        print(rnd_state)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=rnd_state)
         acc_clf1, f1_clf1, time_clf1, conf_mtx_clf1 = eval_classifier(clf1, X_train, X_test, y_train, y_test)
         acc_clf2, f1_clf2, time_clf2, conf_mtx_clf2 = eval_classifier(clf2, X_train, X_test, y_train, y_test)
@@ -36,7 +37,6 @@ def compare_classifiers(exp_num: int, X, y, clf1, clf2) -> Tuple[float, float, f
         f1_list_clf2.append(f1_clf2)
         time_list_clf2.append(time_clf2)
         conf_mtx_list_clf2.append(conf_mtx_clf2)
-        print(f"Eksperyment: {_}")
 
     return (round(np.mean(acc_list_clf1), 2), round(np.std(acc_list_clf1, axis=0), 2), round(np.mean(f1_list_clf1), 2),
             round(np.std(f1_list_clf1, axis=0), 2), round(np.mean(time_list_clf1), 2),
@@ -83,8 +83,7 @@ def rf_experiment_classifier_ratio(experiments_number: int, X, y, n: int, sample
             f1_scores.append(f1)
             f1_scores_std_list.append(f1_std)
             conf_matrices.append(conf_matrix)
-            print(f"Experiment nr {i + 1}")
-        print(f"Po eksperymentach accuracy: {accuracies}")
+
         final_accuracies.append(round(np.mean(accuracies), 2))
         final_f1_scores.append(round(np.mean(f1_scores), 2))
         final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
@@ -121,8 +120,7 @@ def rf_experiment_samples_percentages(experiments_number: int, X, y, n: int, sam
             f1_scores.append(f1)
             f1_scores_std_list.append(f1_std)
             conf_matrices.append(conf_matrix)
-            print(f"Experiment nr {i + 1}")
-        print(f"Po eksperymentach accuracy: {accuracies}")
+
         final_accuracies.append(round(np.mean(accuracies), 2))
         final_f1_scores.append(round(np.mean(f1_scores), 2))
         final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
@@ -158,8 +156,7 @@ def rf_experiment_tree_number(experiments_number: int, X, y, n_list: List[int], 
             f1_scores.append(f1)
             f1_scores_std_list.append(f1_std)
             conf_matrices.append(conf_matrix)
-            print(f"Experiment nr {i + 1}")
-        print(f"Po eksperymentach accuracy: {accuracies}")
+
         final_accuracies.append(round(np.mean(accuracies), 2))
         final_f1_scores.append(round(np.mean(f1_scores), 2))
         final_conf_matrices.append(np.round(np.sum(conf_matrices, axis=0) / len(conf_matrices)))
@@ -181,20 +178,12 @@ def eval_cross_validation(X, y, model, splits_number: int = 5) -> Tuple[float, f
     for train_index, test_index in kf.split(X, y):
         train_index_list = train_index.tolist()
         test_index_list = test_index.tolist()
-        # print(train_index_list)
-        # print(test_index_list)
-        # missing_indices = set(train_index_list) - set(X.index)
-        # print(missing_indices)
 
         valid_train_indices = [idx for idx in train_index_list if idx in X.index]
         valid_test_indices = [idx for idx in test_index_list if idx in X.index]
         X_train, y_train = X.loc[valid_train_indices, :], y.loc[valid_train_indices]
         X_test, y_test = X.loc[valid_test_indices, :], y.loc[valid_test_indices]
 
-        # print(train_index)
-        # print(test_index)
-        # X_train, y_train = X.loc[train_index, :], y.loc[train_index]
-        # X_test, y_test = X.loc[test_index, :], y.loc[test_index]
         model.fit(X_train, y_train)
         accuracy, f1_score, conf_matrix = model.eval(X_test, y_test)
         accuracies.append(accuracy)
@@ -222,7 +211,8 @@ def format_label(val):
         return str(val)
 
 
-def plot_results(x_val, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str, exp_type: str):
+def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_label: str, y_label: str, class_name: str, exp_type: str):
+    plt.style.use('default')
     plt.figure(figsize=(8, 6))
 
     if isinstance(x_val[0], Iterable):
@@ -235,6 +225,9 @@ def plot_results(x_val, y_val: List[float], y_std_val: List[float], x_label: str
     plt.ylabel(y_label)
     plt.title(f"{y_label} = f({x_label})")
     plt.grid(True)
+
+    plt.xscale('linear')
+    plt.yscale('linear')
 
     file_name = f'../images/{class_name}_plot{y_label}_{exp_type}.png'
     plt.savefig(file_name)
