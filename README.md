@@ -1,4 +1,4 @@
-# Las_z_NBC
+# Las z NBC
 
 
 ## Opis projektu:
@@ -10,12 +10,18 @@ Las losowy z naiwnym klasyfikatorem bayesowskim (NBC) w zadaniu klasyfikacji. Po
   
   💠 Adam Szumada
 
-## Ważne terminy:
+## Wybieranie badań / eksperymentów do wykonania:
+Badania uruchamia się poprzez odpowiednią konfigurację pliku main.py.
+Należy w nim podać pojedynczo lub w kolejce doświadczenia, które chcemy wykonać.
+Do każdego doświdczenia należy w argumencie wpisać ciąg znaków odpowiadający danemu zbiorowi danych.
+Możliwe opcje:
 
-  💠 05.11 -> wybór tematu projektu ✅ (19.10.2023r.)
-  
-  💠 19.11 -> przesłanie założeń wstępnych (dokumentacji wstępnej) ✅ (18.11.2023r.) - ocena: 10/10pkt 
-  
-  💠 21.01 -> przysłanie kodu oraz dokumentacji końcowej ❌
-  
-  💠 26.01 -> ostateczny termin oddania projektów (z karą) ❌
+    'corona' -> corona.csd
+    'divorce' -> divorce.csv
+    'glass' -> glass.csv
+    'letter' -> letter-recognition.csv
+    'loan_approval -> loan_approval.csv
+
+# Uruchamianie badań (programu):
+
+    python main.py
