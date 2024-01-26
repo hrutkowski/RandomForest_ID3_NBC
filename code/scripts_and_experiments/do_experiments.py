@@ -1,10 +1,11 @@
 # Autor: Hubert Rutkowski
+
 from sklearn.naive_bayes import CategoricalNB
 from sklearn.tree import DecisionTreeClassifier
 from algorithms.id3_classifier import ID3
 from algorithms.nbc_classifier import NBC
-from experients_helpers import *
 from scripts_and_experiments.datasets_manager import *
+from scripts_and_experiments.experients_helpers import *
 
 
 # Porównanie klasyfikacji przy użyciu wybranej przez Nas gotowej i lekko przerobionej pod Nasze
@@ -131,9 +132,9 @@ def samples_percentage_influence(dataset_name: str):
     plot_confusion_matrix(avg_conf_mtx, class_labels, dataset_name, 'samples_percentage')
 
 
-if __name__ == "__main__":
-    id3_comparison('corona')
-    nbc_comparison('corona')
-    # tree_number_influence('divorce')
-    # classifier_ratio_influence('divorce')
-    # samples_percentage_influence('divorce')
+# if __name__ == "__main__":
+#     id3_comparison('corona')
+#     nbc_comparison('corona')
+#     tree_number_influence('glass')
+#     classifier_ratio_influence('divorce')
+#     samples_percentage_influence('divorce')

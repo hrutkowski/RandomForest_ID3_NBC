@@ -1,8 +1,6 @@
 # Autor: Adam Szumada
 #https://studygyaan.com/data-science/creating-a-decision-tree-using-the-id3-algorithm
-import numpy as np
 import random
-import pandas as pd
 from scripts_and_experiments.datasets_manager import *
 
 

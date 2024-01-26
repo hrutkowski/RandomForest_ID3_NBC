@@ -1,9 +1,7 @@
 # Autor: Hubert Rutkowski
 # Plik używany do testowania działania lasu losowego podczas implementacji dla naszych zbiorów danych
-from sklearn.model_selection import train_test_split
 from algorithms.nbc_classifier import NBC
 from algorithms.id3_classifier import ID3
-from algorithms.random_forest_algorithm import RandomForest
 from datasets_manager import *
 from experients_helpers import *
 import numpy as np

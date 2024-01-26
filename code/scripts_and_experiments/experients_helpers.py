@@ -6,7 +6,6 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from sklearn.model_selection import train_test_split, KFold
 from matplotlib import pyplot as plt
-from openpyxl import Workbook
 from typing import List, Tuple, Iterable
 from algorithms.random_forest_algorithm import RandomForest
 
@@ -201,7 +200,7 @@ def plot_confusion_matrix(conf_mtx: np.ndarray, class_labels: list, class_name: 
     plt.xlabel('Predicted values')
     plt.ylabel('True values')
     plt.title('Confusion Matrix')
-    plt.savefig(f'../matrices/{class_name}_{exp_name}.png')
+    plt.savefig(f'matrices/{class_name}_{exp_name}.png')
 
 
 def format_label(val):
@@ -229,7 +228,7 @@ def plot_results(x_val: List, y_val: List[float], y_std_val: List[float], x_labe
     plt.xscale('linear')
     plt.yscale('linear')
 
-    file_name = f'../images/{class_name}_plot_{y_label}_{exp_type}.png'
+    file_name = f'images/{class_name}_plot_{y_label}_{exp_type}.png'
     plt.savefig(file_name)
 
 
@@ -240,7 +239,7 @@ def generate_excel_table(x_val: List, y_val: List[float], y_std_val: List[float]
             f'{y1_label}_std': y_f1_val}
     df = pd.DataFrame(data)
 
-    file_name = f'../tables/{class_name}_table_{y_label}_{y1_label}_{exp_type}.xlsx'
+    file_name = f'tables/{class_name}_table_{y_label}_{y1_label}_{exp_type}.xlsx'
     df.to_excel(file_name, index=False)
 
 
@@ -253,5 +252,5 @@ def save_classifiers_comparison_results(results_clf1: List[float], results_clf2:
     }
     df = pd.DataFrame(data).T
 
-    file_path = f'../tables/{exp_name}_{clf1_name}_{clf2_name}_{dataset_name}.xlsx'
+    file_path = f'tables/{exp_name}_{clf1_name}_{clf2_name}_{dataset_name}.xlsx'
     df.to_excel(file_path, index=True, header=False)
