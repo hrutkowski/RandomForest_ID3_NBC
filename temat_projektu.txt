@@ -1,5 +1,0 @@
-Las losowy z naiwnym klasyfikatorem bayesowskim (NBC) w zadaniu klasyfikacji.
-Postępujemy tak jak przy tworzeniu lasu losowego, tylko co drugi klasyfikator w lesie to NBC.
-Jeden z klasyfikatorów (NBC lub drzewo ID3) może pochodzić z istniejącej implementacji.
-Przed rozpoczęciem realizacji projektu proszę zapoznać się z zawartością
-strony: http://staff.elka.pw.edu.pl/~rbiedrzy/UMA/index.html.
